@@ -8,7 +8,7 @@
 <body>
     <h1>HOLA MUNDO</h1>
     <?php 
-    echo "<h3>Soy Rosa</h3><br/>Hoy es:".date("d/m/y");
+    echo "<h3>Soy Rosa Mateos</h3><br/>Hoy es:".date("d/m/y");
     ?>
 </body>
 </html>
