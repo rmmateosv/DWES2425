@@ -1,5 +1,9 @@
 <?php
 require_once 'Ticket.php';
+require_once 'AccesoDatos.php';
+
+//Creamos una instancia de acceso a los datos
+$ad = new AccesoDatos('ventas.txt');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,9 +33,28 @@ require_once 'Ticket.php';
     <?php
     if(isset($_POST['enviar'])){
         //Crear un objeto de la clase Ticket
-        $producto[],
-        $t = new Ticket();
+        $datosPRoducto = explode('-',$_POST['producto']);
+        $t = new Ticket($datosPRoducto[0],$datosPRoducto[1],$_POST['cantidad']);
+
+        //Introducir el ticket en la venta
+        $ad->insertarProducto($t);
     }
+     //Recuperar lo que hay en el fichero y pintarlo en una tabla
+     echo '<h3>Productos</h3>';
+     echo '<table>';
+     echo '<tr><th>Producto</th><th>Precio U</th><th>Cantidad</th><th>Total</th></tr>';
+     //Creamos un array y lo rellenamos con todos los productos del fichero
+     //El array va a contener objetos ticket
+     $productos = $ad->obtenerProductos();
+     foreach($productos as $p){
+        echo '<tr>';
+        echo '<td>'.$p->getProducto().'</td>';
+        echo '<td>'.$p->getPrecioU().'</td>';
+        echo '<td>'.$p->getCantidad().'</td>';
+        echo '<td>'.$p->getTotal().'</td>';
+        echo '</tr>';
+     }
+     echo '</table>';
     ?>
 </body>
 </html>
