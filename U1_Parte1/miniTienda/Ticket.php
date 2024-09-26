@@ -14,7 +14,7 @@ class Ticket{
     }
     
     function __destruct(){
-        echo "<h4 style='color:red'>Producto ".$this->producto." destruido</h4>";
+        //echo "<h4 style='color:red'>Producto ".$this->producto." destruido</h4>";
     }
 
     /**
