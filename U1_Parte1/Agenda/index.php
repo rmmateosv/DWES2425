@@ -1,3 +1,7 @@
+<?php
+require_once 'Modelo.php';
+$modelo = new Modelo('agenda.dat');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,6 +42,24 @@
     if(isset($_POST['crear'])){
         if(empty($_POST['nombre']) || empty($_POST['telf']) or empty($_FILES['foto']['name']) or empty($_POST['tipo'])){
             echo '<h3 style="color:red;">Error, hay campos vacíos</h3>';
+        }
+        else{
+            $id = $modelo->obtenerID();
+            //El nombre del fichero será el el instante de tiempo
+            // en el que se sube y el nombre original.
+            //Se guardarán en la carpeta img
+            $nombref='img/'.time().$_FILES['foto']['name'];
+
+            $c=new Contacto($id,$_POST['nombre'],$_POST['telf'],
+            $_POST['tipo'],$nombref);
+
+            //Guardar el contacto en el fichero
+            $modelo->crearContacto($c);
+
+            //Guardar foto en el servidor
+            $destino = $nombref;
+            $origen = $_FILES['foto']['tmp_name'];
+            move_uploaded_file($origen,$destino);
         }
     }
     else{
