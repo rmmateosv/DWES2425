@@ -44,27 +44,53 @@ $modelo = new Modelo('agenda.dat');
             echo '<h3 style="color:red;">Error, hay campos vacíos</h3>';
         }
         else{
-            $id = $modelo->obtenerID();
-            //El nombre del fichero será el el instante de tiempo
-            // en el que se sube y el nombre original.
-            //Se guardarán en la carpeta img
-            $nombref='img/'.time().$_FILES['foto']['name'];
-
-            $c=new Contacto($id,$_POST['nombre'],$_POST['telf'],
-            $_POST['tipo'],$nombref);
-
-            //Guardar el contacto en el fichero
-            $modelo->crearContacto($c);
-
-            //Guardar foto en el servidor
-            $destino = $nombref;
-            $origen = $_FILES['foto']['tmp_name'];
-            move_uploaded_file($origen,$destino);
+            //Chequear si ya hay un contacto para el teléfono
+            $persona = $modelo->obtenerContacto($_POST['telf']);
+            //Persona tiene null si no hay contacto y un objeto contacto
+            //con todos los datos si sí hay contacto
+            if($persona==null){
+                $id = $modelo->obtenerID();
+                //El nombre del fichero será el el instante de tiempo
+                // en el que se sube y el nombre original.
+                //Se guardarán en la carpeta img
+                $nombref='img/'.time().$_FILES['foto']['name'];
+                $c=new Contacto($id,$_POST['nombre'],$_POST['telf'],
+                $_POST['tipo'],$nombref);
+                //Guardar el contacto en el fichero
+                $modelo->crearContacto($c);
+                //Guardar foto en el servidor
+                $destino = $nombref;
+                $origen = $_FILES['foto']['tmp_name'];
+                move_uploaded_file($origen,$destino);
+            }
+            else{
+                echo '<h3 style="color:red;">Error:Ya existe un contacto con ese tlf '
+                .$persona->getNombre().'</h3>';
+            }
         }
     }
-    else{
-
+    ?>
+    <table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Tipo</th>
+        <th>Foto</th>
+    </tr>
+    <?php
+    //Mostrar contactos de la agenda
+    $contactos = $modelo->obtenerContactos();
+    foreach($contactos as $c){
+        echo '<tr>';
+        echo '<td>'.$c->getId().'</td>';
+        echo '<td>'.$c->getNombre().'</td>';
+        echo '<td>'.$c->getTelefono().'</td>';
+        echo '<td>'.$c->getTipo().'</td>';
+        echo '<td><img src="'.$c->getFoto().'" width="20px"/></td>';
+        echo '</tr>';
     }
     ?>
+    </table>
 </body>
 </html>
