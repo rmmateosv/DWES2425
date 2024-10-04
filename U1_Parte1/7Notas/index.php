@@ -44,7 +44,40 @@ $asigs = $modelo->obtenerAsignaturas();
             <label for="nota">Nota</label><br/>
             <input type="number" name="nota" id="nota" placeholder="Nota"/>
         </div>
-        <input type="submit" value="Crear Nota">
+        <input type="submit" value="Crear Nota" name="crear">
     </form>
+    <?php
+    if(isset($_POST['crear'])){
+        if(empty($_POST['asig']) or empty($_POST['fecha']) or empty($_POST['desc']) or empty($_POST['tipo']) or empty($_POST['nota'])){
+            echo '<h3 style="color:red;">Rellena todos los campos</h3>';
+        }
+        else{
+            $n = new Nota($_POST['asig'],$_POST['fecha'],$_POST['tipo'],$_POST['desc'],$_POST['nota']);
+            $modelo->crearNota($n);
+        }
+    }
+    ?>
+    <h2>Notas</h2>
+    <table border="1">
+        <tr>
+            <th>Asignatura</th>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Nota</th>
+        </tr>
+    <?php
+    $notas=$modelo->obtenerNotas();
+    foreach($notas as $n){
+        echo '<tr>';
+        echo '<td>'.$n->getAsi().'</td>';
+        echo '<td>'.date('d/m/Y',strtotime($n->getFecha())).'</td>';
+        echo '<td>'.$n->getTipo().'</td>';
+        echo '<td>'.$n->getDesc().'</td>';
+        echo '<td>'.$n->getNota().'</td>';
+        echo '</tr>';
+    }
+    ?>
+    </table>
 </body>
 </html>
