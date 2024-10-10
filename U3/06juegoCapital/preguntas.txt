@@ -1,0 +1,6 @@
+1;España;Madrid
+2;Francia;París
+3;Portugal;Lisboa
+4;Italia;Roma
+5;Grecia;Atenas
+6;Bulgaria;Sofía
