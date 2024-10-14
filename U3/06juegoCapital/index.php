@@ -10,8 +10,9 @@ require_once 'Modelo.php';
 if(isset($_GET['salir']) ){
     //Elimina sesisón en servidor
     session_destroy();
-    //Eliminar $_SESSION
+    //Eliminar variables en servidor
     session_unset();
+    header('location:index.php')
 }
 //Si no hay noombre no se puede jugar
 if(!isset($_SESSION['nombre'])){
