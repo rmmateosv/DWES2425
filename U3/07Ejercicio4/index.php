@@ -4,7 +4,6 @@ require_once 'Evento.php';
 if (isset($_COOKIE['eventos'])) {
     //Recojo el valor de la cookie si lo tiene
     $eventos = unserialize($_COOKIE['eventos']);
-    echo 'Array en cookie:'.var_dump(array_keys($eventos));
 }
 else{
     $eventos=array();
@@ -60,16 +59,14 @@ if (isset($_POST['aniadir'])) {
                 echo "<tr><td>" . $event->getFecha() . "</td>";
                 echo "<td>" . $event->getHora() . "</td>";
                 echo "<td>" . $event->getAsunto() . "</td>";
-                echo "<td><form action='#' method='post'>
+                echo "<td><form action='' method='post'>
                 <button type='submit' value='".$i."' name='eliminar'>Eliminar</button>
                 </form></td></tr>";
-
-                
             }
         }
         ?>
         <tr>
-            <form action="#" method="post">
+            <form action="" method="post">
                 <td><input type="date" name="fecha" id="fecha"></td>
                 <td><input type="time" name="hora" id="hora" placeholder="--:--"></td>
                 <td><input type="text" name="asunto" id="asunto"></td>
@@ -78,25 +75,20 @@ if (isset($_POST['aniadir'])) {
         </tr>
     </table>
     <?php
-    if(isset($_GET['error'])){
-        echo $_GET['error'];
+    if(isset($error)){
+        echo $error;
     }
     //Si se ha pulsado algunos de los botones eliminar borro el valor del pulsado
     if (isset($_POST['eliminar'])) {
+        
         unset($eventos[$_POST['eliminar']]);
         $eventos=array_values($eventos);
+        
     }
     //Si se ha pulsado añadir o borrar actualiza la cookie con el valor de eventos y recarga la pagina
-    if (isset($_POST['aniadir']) or isset($_POST['eliminar'])) {
+    if ((isset($_POST['aniadir']) or isset($_POST['eliminar'])) and !isset($error)) {
         setcookie('eventos',serialize($eventos),time()+(60*60*24*30));
-        if(isset($error)){
-            header('location:index.php?error='.$error);
-        }
-
-        else{
-            header('location:index.php');
-        }
-        
+        header('location:'.$_SERVER['PHP_SELF']);
     }
     ?>
 </body>
