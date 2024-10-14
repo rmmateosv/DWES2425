@@ -12,7 +12,7 @@ if(isset($_GET['salir']) ){
     session_destroy();
     //Eliminar variables en servidor
     session_unset();
-    header('location:index.php')
+    header('location:index.php');
 }
 //Si no hay noombre no se puede jugar
 if(!isset($_SESSION['nombre'])){
