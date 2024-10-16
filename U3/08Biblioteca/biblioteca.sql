@@ -2,17 +2,30 @@ drop database if exists biblioteca;
 create database biblioteca;
 use biblioteca;
 
+create table usuarios(
+	id varchar(9) primary key,
+    ps blob not null,
+    tipo enum ('A','S') -- A para admin y S para socios
+)engine innodb;
+insert into usuarios values('admin',sha2('admin',512), 'A' ),
+('11111111A',sha2('11111111A',512), 'S' ),
+('22222222A',sha2('22222222A',512), 'S' ),
+('33333333A',sha2('33333333A',512), 'S' ),
+('44444444A',sha2('44444444A',512), 'S' ),
+('55555555A',sha2('55555555A',512), 'S' );
 create table socios(
 	id int auto_increment primary key,
     nombre varchar(100) not null,
     fechaSancion date default null,
-    email varchar(255) not null
+    email varchar(255) not null,
+    us varchar(9) not null,
+    foreign key (us) references usuarios(id) on update cascade on delete restrict
 )engine innodb;
-insert into socios values (null,'Carlos Díaz',null,'carlos@gmail.com'),
- (null,'Marta Sánchez',null,'marta@gmail.com'),
- (null,'Lucas López',null,'lucas@gmail.com'),
- (null,'Raúl García',null,'raul@gmail.com'),
- (null,'Ana Martín',20241231,'ana@gmail.com');
+insert into socios values (null,'Carlos Díaz',null,'carlos@gmail.com','11111111A'),
+ (null,'Marta Sánchez',null,'marta@gmail.com','22222222A'),
+ (null,'Lucas López',null,'lucas@gmail.com','33333333A'),
+ (null,'Raúl García',null,'raul@gmail.com','44444444A'),
+ (null,'Ana Martín',20241231,'ana@gmail.com','55555555A');
 
 create table libros(
 	id int auto_increment primary key,
@@ -92,5 +105,10 @@ end//
 delimiter ;
 
 select comprobarSiPrestar(5,1);  -- Chequea ejemplares
+select comprobarSiPrestar(5,100);  -- Chequea libro existe
 select comprobarSiPrestar(50,2);  -- Chequea socio
 select comprobarSiPrestar(5,2);  -- Chequea socio
+select comprobarSiPrestar(1,2);  -- Préstamos caducado
+select comprobarSiPrestar(2,2);  -- Socio con 2 o más préstamos
+select comprobarSiPrestar(3,2);  -- Correcto
+select comprobarSiPrestar(4,2);  -- Correcto
