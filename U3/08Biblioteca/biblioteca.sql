@@ -8,6 +8,11 @@ create table socios(
     fechaSancion date default null,
     email varchar(255) not null
 )engine innodb;
+insert into socios values (null,'Carlos Díaz',null,'carlos@gmail.com'),
+ (null,'Marta Sánchez',null,'marta@gmail.com'),
+ (null,'Lucas López',null,'lucas@gmail.com'),
+ (null,'Raúl García',null,'raul@gmail.com'),
+ (null,'Ana Martín',20241231,'ana@gmail.com');
 
 create table libros(
 	id int auto_increment primary key,
@@ -15,6 +20,11 @@ create table libros(
     ejemplares int not null,
     autor varchar(100)
 )engine innodb;
+insert into libros values (null,'La sombra del viento',0,'Carlos Ruíz Zafón'),
+	(null,'El quijote',12,'Cervantes'),
+    (null,'Redes',5,'Eloy Moreno'),
+    (null,'Invisible',10,'Eloy Moreno'),
+    (null,'Terra Alta',3,'Javier Cercas');
 
 create table prestamos(
 	id int auto_increment primary key,
@@ -26,6 +36,15 @@ create table prestamos(
     foreign key (socio) references socios(id) on update cascade on delete restrict,
     foreign key (libro) references libros(id) on update cascade on delete restrict
 )engine innodb;
+
+insert into prestamos values (null,1,1,20230101,20230115,null),
+(null,2,1,20230101,20230115,20230110),
+(null,2,3,20240901,20241031,null),
+(null,2,1,20240901,20241031,null),
+(null,3,3,20240901,20241031,null);
+
+
+
 -- Función que comprueba si se puede prestar el libro al socio
 -- Devuelve:
 -- 1: Si se puede hacer el préstamo
@@ -33,38 +52,45 @@ create table prestamos(
 -- -2 Si el socio está sancionado o el socio no existe
 -- -3 Si el socio tiene préstamos caducados
 -- -4 Si el socio tiene más de 2 libros prestados
--- 0 en cualquier otro caso (error)
 delimiter //
-create function comprobarSiPrestar(pSocio int, pLibro int) returns int 
+create function comprobarSiPrestar(pSocio int, pLibro int) returns int deterministic
 begin
-	declare resultado int default 0;
+	declare resultado int default 1;
     declare vId int;
     
     -- Comprobar ejemplares
-    select id from libros
-		into vId
+    select id into vId from libros
 		where id = pLibro  and ejemplares >0;
     if(vId is null) then
 		return -1;
     end if;
     -- Comprobar socio
-    select id from socio
-		into vId
-		where id = pSocio and fechaSancion is null;
+    set vId=null;
+    select id into vId from socios
+		where id = pSocio and (fechaSancion is null or fechaSancion < curdate());
     if(vId is null) then
 		return -2;
     end if;  
     
     -- Chequear si el socio tiene préstamos caducados
-    select  count(*) from prestamos
-		into  vId
+    select  count(*) into  vId from prestamos
 		where socio = pSocio and fechaD < curdate() and fechaRD is null;
     if(vId>0) then
 		return -3;
     end if;
     
+    -- Chequear si el scocio tiene 2 o más libros
+	select  count(*) into  vId from prestamos
+		where socio = pSocio  and fechaRD is null;
+    if(vId>=2) then
+		return -4;
+    end if;
     
-        
     return resultado;
-end;
+end//
+
 delimiter ;
+
+select comprobarSiPrestar(5,1);  -- Chequea ejemplares
+select comprobarSiPrestar(50,2);  -- Chequea socio
+select comprobarSiPrestar(5,2);  -- Chequea socio
