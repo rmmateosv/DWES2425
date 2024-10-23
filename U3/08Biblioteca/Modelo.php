@@ -142,6 +142,46 @@ class Modelo{
         return $resultado;
     }
 
+    public function crearPrestamo($idSocio, $idLibro){
+        $resultado=0;
+        try {
+            //Iniciamos transacción ya que vamos a hacer un
+            //Insert y un update
+            $this->conexion->beginTransaction();
+            //Insert
+            $consulta = $this->conexion->prepare('INSERT into prestamos values
+                (null,?,?,curdate(), adddate(curdate(), INTERVAL 30  DAY ), null)');
+            $params=array($idSocio,$idLibro);
+            if($consulta->execute($params)){
+                //Comprobamos si se ha insertado 1 fila
+                if($consulta->rowCount()==1){
+                    //Obtenemos el id del préstamos creado
+                    $id = $this->conexion->lastInsertId();
+                    //Update
+                    $consulta = $this->conexion->prepare('UPDATE libros 
+                        set ejemplares=ejemplares-1 where id = ?');
+                    $params=array($idLibro);
+                    if($consulta->execute($params) and $consulta->rowCount()==1){
+                        $this->conexion->commit();
+                        $resultado=$id;
+                    }
+                    else{
+                        $this->conexion->rollBack(); //Deshacemos Insert
+                    }
+                    
+                }
+            }
+        } 
+        catch (PDOException $e) {
+            $this->conexion->rollBack();
+            echo $e->getMessage();
+        }
+        catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
+
     /**
      * Get the value of conexion
      */ 

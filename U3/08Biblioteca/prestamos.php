@@ -21,6 +21,9 @@ require_once 'controlador.php';
         <div>
             <!-- ÁREA DE ERRORES -->
             <?php
+            if (isset($mensaje)) {
+                echo '<div class="alert alert-success" role="alert">' . $mensaje . '</div>';
+            }
             if (isset($error)) {
                 echo '<div class="alert alert-danger" role="alert">' . $error . '</div>';
             }
