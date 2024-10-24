@@ -2,6 +2,7 @@
 require_once 'Usuario.php';
 require_once 'Socio.php';
 require_once 'Libro.php';
+require_once 'Prestamo.php';
 
 class Modelo{
     
@@ -177,6 +178,34 @@ class Modelo{
             echo $e->getMessage();
         }
         catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
+
+    public function obtenerPrestamos(){
+        $resultado = array();
+        try {
+            $consulta = $this->conexion->query('SELECT * from prestamos as p
+                inner join socios as s on p.socio=s.id 
+                inner join libros as l on p.libro=l.id 
+                order by p.fechaD desc,  p.id');
+            if($consulta){
+                while($fila=$consulta->fetch()){
+                    //Creamos objeto préstamo, el socio y el libro son OBJETOS
+                    $p = new Prestamo($fila[0],
+                    new Socio($fila['socio'],$fila['nombre'],
+                                    $fila['fechaSancion'],$fila['email'],$fila['us']),
+                    new Libro($fila['libro'],$fila['titulo'],$fila['ejemplares'],
+                                $fila['autor']),
+                    $fila['fechaP'],
+                    $fila['fechaD'],
+                    $fila['fechaRD']);
+                    //Añadimos el préstamo a resultado
+                    $resultado[]=$p;
+                }
+            }
+        } catch (\Throwable $th) {
             echo $th->getMessage();
         }
         return $resultado;
