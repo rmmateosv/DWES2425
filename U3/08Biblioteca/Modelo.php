@@ -213,9 +213,9 @@ class Modelo{
     function obtenerPrestamo($id){
         $resultado = null;
         try {
-            $consulta = $this->conexion->prepare('SELECT * from prestamo as p 
-                                                    inner join socio as s on p.socio = s.id 
-                                                    inner join libro as l on p.libro = l.id 
+            $consulta = $this->conexion->prepare('SELECT * from prestamos as p 
+                                                    inner join socios as s on p.socio = s.id 
+                                                    inner join libros as l on p.libro = l.id 
                                                     where p.id = ?');
             $params=array($id);
             if($consulta->execute($params)){
@@ -263,6 +263,10 @@ class Modelo{
                         else{
                             $this->conexion->rollBack(); 
                         }
+                    }
+                    else{
+                        $this->conexion->commit();
+                        $resultado=true; 
                     }
                 }   
                 else{

@@ -101,8 +101,8 @@ require_once 'controlador.php';
                                 '</td>';
                             echo '<td>';
                                 echo ($p->getFechaRD() == null ?
-                                    '<button class="btn btn-outline-secondary" type="submit" name="pDevolver" value="' . 
-                                        $p->getId() . '">Devolver</button>'
+                                    '<button class="btn btn-outline-secondary" type="submit" name="pDevolver" 
+                                    value="' . $p->getId() . '">Devolver</button>'
                                     : '');
                             echo '</td>';
                             echo '</tr>';
