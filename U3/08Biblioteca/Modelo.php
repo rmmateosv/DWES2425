@@ -210,6 +210,76 @@ class Modelo{
         }
         return $resultado;
     }
+    function obtenerPrestamo($id){
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare('SELECT * from prestamo as p 
+                                                    inner join socio as s on p.socio = s.id 
+                                                    inner join libro as l on p.libro = l.id 
+                                                    where p.id = ?');
+            $params=array($id);
+            if($consulta->execute($params)){
+                if($fila=$consulta->fetch()){
+                    $resultado = new Prestamo($fila[0],
+                        new Socio($fila['socio'],$fila['nombre'],$fila['fechaSancion'],$fila['email'],$fila['us']),
+                        new Libro($fila['libro'],$fila['titulo'],$fila['ejemplares'],$fila['autor']),
+                        $fila['fechaP'],
+                        $fila['fechaD'],
+                        $fila['fechaRD']);
+                }
+            }
+
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
+
+    function devolverPrestamo($p,$sancionar){
+        $resultado=false;
+        try {
+            //Iniciamos transacción
+            $this->conexion->beginTransaction();
+            //Devolver Préstamo
+            $consulta = $this->conexion->prepare('UPDATE prestamos set fechaRD=curdate() 
+                                                    where id=?');
+            $params=array($p->getId());
+            if($consulta->execute($params) and $consulta->rowCount()==1){
+                //Actualizar ejemplares del libro
+                $consulta=$this->conexion->prepare('UPDATE libros set ejemplares=ejemplares+1 
+                                                        where id=?');
+                $params=array($p->getLibro()->getId());
+                if($consulta->execute($params) and $consulta->rowCount()==1){
+                    //Sancionar socio si es necesario
+                    if($sancionar){
+                        $consulta=$this->conexion->prepare('UPDATE socios set 
+                                                            fechaSancion=adddate(curdate(),interval 1 month)
+                                                        where id=?');
+                        $params=array($p->getSocio()->getId());
+                        if($consulta->execute($params) and $consulta->rowCount()==1){
+                           $this->conexion->commit();
+                           $resultado=true; 
+                        }
+                        else{
+                            $this->conexion->rollBack(); 
+                        }
+                    }
+                }   
+                else{
+                    $this->conexion->rollBack();
+                }
+            }
+        } catch (PDOException $th) {
+            //throw $th;
+            $this->conexion->rollBack();
+            echo $th->getMessage();
+        }
+        catch (\Throwable $th) {
+            //throw $th;
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
 
     /**
      * Get the value of conexion

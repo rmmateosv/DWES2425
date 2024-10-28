@@ -31,4 +31,27 @@ if(isset($_POST['pCrear']) and $_SESSION['usuario']->getTipo()=='A'){
         $error = $resultado;
     }
 }
+if(isset($_POST['pDevolver']) and $_SESSION['usuario']->getTipo()=='A'){
+    //Obtener el préstamos
+    $p=$bd->obtenerPrestamo($_POST['pDevolver']);
+    if($p!=null){
+        //Chequear si hay que sancionar al socio
+        $sancion=false;
+        if(strtotime($p->getFechaD())<strtotime(date('Y-m-d'))){
+            $sancion = true;
+        }
+        if($bd->devolverPrestamo($p,$sancion)){
+            $mensaje='Préstamo devuelto';
+            if($sancion){
+                $mensaje.=' Se ha sancionado al socio';
+            }
+        }
+        else{
+            $error='Error, al devolver el préstamo';
+        }
+    }
+    else{
+        $error='Préstamo no existe';
+    }
+}
 ?>
