@@ -309,6 +309,22 @@ class Modelo{
         }
         return $resultado;
     }
+    function obtenerUsuarioDni($dni){
+        $resultado=null;
+        try {
+            $consulta=$this->conexion->prepare('SELECT * from usuarios where upper(id) = upper(?)');
+            $params=array($dni);
+            if($consulta->execute($params)){
+                if($fila=$consulta->fetch()){
+                    $resultado=new Usuario($fila['id'],$fila['tipo']);
+                }
+            }
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+
+        return $resultado;
+    }
 
     /**
      * Get the value of conexion

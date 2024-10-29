@@ -54,4 +54,26 @@ if(isset($_POST['pDevolver']) and $_SESSION['usuario']->getTipo()=='A'){
         $error='Préstamo no existe';
     }
 }
+if(isset($_POST['sCrear']) and $_SESSION['usuario']->getTipo()=='A'){
+    if(!isset($_POST['dni']) or !isset($_POST['tipo'])){
+        $error='Error, rellena dni y tipo';
+    }
+    else{
+        //Comprobar si ya hay un usuario con ese dni
+        $us = $bd->obtenerUsuarioDni($_POST['dni']);
+        if($us==null){
+            //Puedo crear el nuevo usuario
+            if($_POST['tipo']=='A'){
+
+
+            }
+            elseif($_POST['tipo']=='S'){
+                
+            }
+        }
+        else{
+            $error='Error, ya existe un usuario con ese DNI';
+        }
+    }
+}
 ?>
