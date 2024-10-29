@@ -284,6 +284,31 @@ class Modelo{
         }
         return $resultado;
     }
+    function obtenerPrestamosSocio($us){
+        $resultado = array();
+        try {
+            //Seleccionamos los préstamos de un socio
+            $consulta = $this->conexion->prepare('SELECT * from prestamos as p
+                            inner join socios as s on p.socio=s.id 
+                            inner join libros as l on p.libro=l.id 
+                             where s.us = ?');
+            $params=array($us->getId());
+            if($consulta->execute($params)){
+                while($fila=$consulta->fetch()){
+                    $resultado[]= new Prestamo($fila[0],
+                            new Socio($fila['socio'],$fila['nombre'],$fila['fechaSancion'],$fila['email'],$fila['us']),
+                            new Libro($fila['libro'],$fila['titulo'],$fila['ejemplares'],$fila['autor']),
+                            $fila['fechaP'],
+                            $fila['fechaD'],
+                            $fila['fechaRD']);
+                }
+            }
+            
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
 
     /**
      * Get the value of conexion
