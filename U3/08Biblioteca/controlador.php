@@ -21,7 +21,7 @@ if(isset($_POST['pCrear']) and $_SESSION['usuario']->getTipo()=='A'){
         //Hacer el préstamo
         $numero = $bd->crearPrestamo($_POST['socio'],$_POST['libro']);
         if($numero>0) {
-            $mensaje='Préstamo nº '.$numero.'registrado';
+            $mensaje='Préstamo nº '.$numero.' registrado';
         }
         else{
             $error = 'Se ha producido un error al crear el préstamo';
@@ -54,6 +54,22 @@ if(isset($_POST['pDevolver']) and $_SESSION['usuario']->getTipo()=='A'){
         $error='Préstamo no existe';
     }
 }
+if(isset($_POST['lCrear']) and $_SESSION['usuario']->getTipo()=='A'){
+    if(empty($_POST['titulo']) or empty($_POST['autor']) or empty($_POST['ejemplares'])){
+        $error='Error, rellena los datos del libros';
+    }
+    else{
+        $l = new Libro(0,$_POST['titulo'],$_POST['ejemplares'],$_POST['autor']);
+        $numero = $bd->crearLibro($l);
+        if($numero>0) {
+            $mensaje='Libros nº '.$numero.' creado';
+        }
+        else{
+            $error = 'Se ha producido un error al crear el libro';
+        }
+        
+    }
+}
 if(isset($_POST['sCrear']) and $_SESSION['usuario']->getTipo()=='A'){
     if(!isset($_POST['dni']) or !isset($_POST['tipo'])){
         $error='Error, rellena dni y tipo';
@@ -68,12 +84,15 @@ if(isset($_POST['sCrear']) and $_SESSION['usuario']->getTipo()=='A'){
 
             }
             elseif($_POST['tipo']=='S'){
-                
+                $_SESSION['accion']=true;
             }
         }
         else{
             $error='Error, ya existe un usuario con ese DNI';
         }
     }
+}
+if(isset($_POST['sCrearSocio']) and $_SESSION['usuario']->getTipo()=='A'){
+    unset($_SESSION['accion']);
 }
 ?>

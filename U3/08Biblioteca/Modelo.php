@@ -309,6 +309,28 @@ class Modelo{
         }
         return $resultado;
     }
+    public function crearLibro($l){
+        $resultado=0;
+        try {
+            $consulta = $this->conexion->prepare('INSERT into libros values
+                (null,?,?,?)');
+            $params=array($l->getTitulo(),$l->getEjemplares(),$l->getAutor());
+            if($consulta->execute($params)){
+                //Comprobamos si se ha insertado 1 fila
+                if($consulta->rowCount()==1){
+                    //Obtenemos el id del préstamos creado
+                    $resultado = $this->conexion->lastInsertId();
+                }
+            }
+        } 
+        catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
     function obtenerUsuarioDni($dni){
         $resultado=null;
         try {
