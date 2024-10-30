@@ -42,15 +42,17 @@ require_once 'controlador.php';
                         </div>
                         <div class="col-md-3">
                             <label for="tipo" class="form-label">Tipo</label>
-                            <select class="form-select" name="tipo" id="tipo">
+                            <select class="form-select" name="tipo" id="tipo" onchange="submit()">
                                 <option value="A">Administrador</option>
                                 <option value="S">Socio</option>
                             </select>
                         </div>
+                        <!-- quitar botón 
                         <div class="col-md-3">
                             <label class="form-label">Acción</label><br />
                             <button class="btn btn-outline-secondary" type="submit" id="sCrear" name="sCrear">+</button>
                         </div>
+            -->
 
                     </div>
                     <?php

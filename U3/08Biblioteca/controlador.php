@@ -70,31 +70,25 @@ if(isset($_POST['lCrear']) and $_SESSION['usuario']->getTipo()=='A'){
         
     }
 }
-if(isset($_POST['sCrear']) and $_SESSION['usuario']->getTipo()=='A'){
-    if(!isset($_POST['dni']) or !isset($_POST['tipo'])){
-        $error='Error, rellena dni y tipo';
-    }
-    else{
-        //Comprobar si ya hay un usuario con ese dni
-        $us = $bd->obtenerUsuarioDni($_POST['dni']);
-        if($us==null){
-            //Puedo crear el nuevo usuario
-            if($_POST['tipo']=='A'){
-
-            }
-            elseif($_POST['tipo']=='S'){
-               $_SESSION['crearSocio']=true;
-            }
-        }
-        else{
-            $error='Error, ya existe un usuario con ese DNI';
-        }
-    }
-}
 if(isset($_POST['sCrearSocio']) and $_SESSION['usuario']->getTipo()=='A'){
     //Crear Socio
     //Desctivamos los datos del socio en el formulario
     unset($_SESSION['crearSocio']);
 }
+elseif(isset($_POST['dni']) and isset($_POST['tipo']) and $_SESSION['usuario']->getTipo()=='A'){
+    //Comprobar si ya hay un usuario con ese dni
+    $us = $bd->obtenerUsuarioDni($_POST['dni']);
+    if($us==null){
+        //Puedo crear el nuevo usuario
+        if($_POST['tipo']=='A'){
 
+        }
+        elseif($_POST['tipo']=='S'){
+            $_SESSION['crearSocio']=true;
+        }
+    }
+    else{
+        $error='Error, ya existe un usuario con ese DNI';
+    }
+}
 ?>
