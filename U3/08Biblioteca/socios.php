@@ -53,6 +53,9 @@ require_once 'controlador.php';
                         </div>
 
                     </div>
+                    <?php
+                    if(isset($_SESSION['crearSocio']) and $_SESSION['crearSocio']){
+                    ?>
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label for="nombre" class="form-label">Nombre</label>
@@ -67,7 +70,9 @@ require_once 'controlador.php';
                             <button class="btn btn-outline-secondary" type="submit" id="sCrearSocio" name="sCrearSocio">+</button>
                         </div>
                     </div>
-
+                <?php
+                }
+                ?>
                 </form>
             <?php
             }

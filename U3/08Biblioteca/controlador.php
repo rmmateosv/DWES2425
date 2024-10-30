@@ -83,13 +83,18 @@ if(isset($_POST['sCrear']) and $_SESSION['usuario']->getTipo()=='A'){
 
             }
             elseif($_POST['tipo']=='S'){
-               
+               $_SESSION['crearSocio']=true;
             }
         }
         else{
             $error='Error, ya existe un usuario con ese DNI';
         }
     }
+}
+if(isset($_POST['sCrearSocio']) and $_SESSION['usuario']->getTipo()=='A'){
+    //Crear Socio
+    //Desctivamos los datos del socio en el formulario
+    unset($_SESSION['crearSocio']);
 }
 
 ?>
