@@ -78,16 +78,14 @@ if (isset($_POST['sCrearSocio']) and $_SESSION['usuario']->getTipo() == 'A') {
                     unset($_POST['dni']);
                     unset($_POST['tipo']);
                 } else {
-                    $error = 'Error al crea el usario';
+                    $error = 'Error al crea el usuario';
                 }
             } elseif ($_POST['tipo'] == 'S' and !empty($_POST['nombre']) and !empty($_POST['email'])) {
                 //Crear socio si todos los dratos están rellenos
                 $s = new Socio(0, $_POST['nombre'], '', $_POST['email'], $_POST['dni']);
                 if ($bd->crearUsuario($u, $s)) {
                     $mensaje = 'Usuario socio creado';
-                    //Una vez que se crea el socio, se destruye la variables de sesión
-                    //Y se dejan de recordar datos
-                    unset($_SESSION['crearSocio']);
+                    //Una vez que se crea el socio se dejan de recordar datos
                     unset($_POST['dni']);
                     unset($_POST['tipo']);
                     unset($_POST['nombre']);
@@ -95,9 +93,6 @@ if (isset($_POST['sCrearSocio']) and $_SESSION['usuario']->getTipo() == 'A') {
                 } else {
                     $error = 'Error al crea el usario';
                 }
-            } elseif ($_POST['tipo'] == 'S') {
-                //Activamos la vista de datos de socio
-                $_SESSION['crearSocio'] = true;
             }
         } else {
             $error = 'Error, ya existe un usuario con ese DNI';

@@ -3,6 +3,8 @@ require_once 'controlador.php';
 if(!isset($_POST['tipo']) or $_POST['tipo']=='A'){
     //Cuando se carga la página se destruye la variable de sesión
     unset($_SESSION['crearSocio']);
+}else{
+    $_SESSION['crearSocio']=true;
 }
 ?>
 <!DOCTYPE html>
