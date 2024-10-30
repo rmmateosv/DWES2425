@@ -81,10 +81,9 @@ if(isset($_POST['sCrear']) and $_SESSION['usuario']->getTipo()=='A'){
             //Puedo crear el nuevo usuario
             if($_POST['tipo']=='A'){
 
-
             }
             elseif($_POST['tipo']=='S'){
-                $_SESSION['accion']=true;
+               
             }
         }
         else{
@@ -92,7 +91,5 @@ if(isset($_POST['sCrear']) and $_SESSION['usuario']->getTipo()=='A'){
         }
     }
 }
-if(isset($_POST['sCrearSocio']) and $_SESSION['usuario']->getTipo()=='A'){
-    unset($_SESSION['accion']);
-}
+
 ?>
