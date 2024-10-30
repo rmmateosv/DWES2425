@@ -5,7 +5,7 @@ use biblioteca;
 create table usuarios(
 	id varchar(9) primary key,
     ps blob not null,
-    tipo enum ('A','S') -- A para admin y S para socios
+    tipo enum ('A','S') not null -- A para admin y S para socios
 )engine innodb;
 insert into usuarios values('admin',sha2('admin',512), 'A' ),
 ('11111111A',sha2('11111111A',512), 'S' ),
@@ -14,7 +14,7 @@ insert into usuarios values('admin',sha2('admin',512), 'A' ),
 ('44444444A',sha2('44444444A',512), 'S' ),
 ('55555555A',sha2('55555555A',512), 'S' );
 create table socios(
-	id int auto_increment primary key,
+	id int auto_increment primary key, 
     nombre varchar(100) not null,
     fechaSancion date default null,
     email varchar(255) not null,
@@ -31,7 +31,7 @@ create table libros(
 	id int auto_increment primary key,
     titulo varchar(100) not null,
     ejemplares int not null,
-    autor varchar(100)
+    autor varchar(100) not null
 )engine innodb;
 insert into libros values (null,'La sombra del viento',0,'Carlos Ruíz Zafón'),
 	(null,'El quijote',12,'Cervantes'),

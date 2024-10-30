@@ -1,5 +1,9 @@
 <?php
 require_once 'controlador.php';
+if(!isset($_POST['tipo']) or $_POST['tipo']=='A'){
+    //Cuando se carga la página se destruye la variable de sesión
+    unset($_SESSION['crearSocio']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,21 +42,23 @@ require_once 'controlador.php';
                     <div class="row g-3">
                         <div class="col-md-3">
                             <label for="dni" class="form-label">DNI</label>
-                            <input type="text" class="form-control" name="dni" id="dni" />
+                            <input type="text" class="form-control" name="dni" id="dni" 
+                            value="<?php echo (isset($_POST['dni'])?$_POST['dni']:'')?>"/>
                         </div>
                         <div class="col-md-3">
                             <label for="tipo" class="form-label">Tipo</label>
                             <select class="form-select" name="tipo" id="tipo" onchange="submit()">
                                 <option value="A">Administrador</option>
-                                <option value="S">Socio</option>
+                                <option value="S" 
+                        <?php echo (isset($_POST['tipo']) && $_POST['tipo']=='S'?'selected="selected"':'')?>
+                            >Socio</option>
                             </select>
                         </div>
-                        <!-- quitar botón 
                         <div class="col-md-3">
                             <label class="form-label">Acción</label><br />
-                            <button class="btn btn-outline-secondary" type="submit" id="sCrear" name="sCrear">+</button>
+                            <button class="btn btn-outline-secondary" type="submit" id="sCrearSocio" name="sCrearSocio">+</button>
                         </div>
-            -->
+        
 
                     </div>
                     <?php
@@ -67,10 +73,7 @@ require_once 'controlador.php';
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" name="email" id="email" />
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Acción</label><br />
-                            <button class="btn btn-outline-secondary" type="submit" id="sCrearSocio" name="sCrearSocio">+</button>
-                        </div>
+                        
                     </div>
                 <?php
                 }
