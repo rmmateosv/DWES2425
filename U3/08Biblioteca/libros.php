@@ -30,7 +30,9 @@ require_once 'controlador.php';
             ?>
         </div>
         <div>
-            
+            <?php
+            if($_SESSION['usuario']->getTipo()=='A'){
+            ?>
                 <form action="" method="post" class="row g-3">
                     <div class="col-md-3">
                         <label for="titulo" class="form-label">Título</label>
@@ -49,7 +51,9 @@ require_once 'controlador.php';
                         <button class="btn btn-outline-secondary" type="submit" id="lCrear" name="lCrear">+</button>
                     </div>
                 </form>
-            
+            <?php
+            }
+            ?>
         </div>
         <div>
             <br />

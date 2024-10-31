@@ -17,7 +17,7 @@ if (basename($_SERVER['PHP_SELF']) == 'menu.php') {
                 if ($_SESSION['usuario']->getTipo() == 'A') {
                 ?>
 
-                    <a class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'socios.php')?'active':''?>" href="socios.php">Socios</a>
+                    <a class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'socios.php')?'active':''?>" href="socios.php">Usuarios</a>
                 <?php
                 }
 
