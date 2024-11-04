@@ -1,8 +1,8 @@
 <?php
 require_once 'Modelo.php';
 
-function genararInput($tipo,$nombre,$valor,$boton){
-    if(isset($_POST[$boton]) && $_POST[$boton]==$valor){
+function generarInput($tipo,$nombre,$valor,$boton,$valorBoton){
+    if(isset($_POST[$boton]) && $_POST[$boton]==$valorBoton){
         return '<'.$tipo.' name="'.$nombre.'" value="'.$valor.'"/>';
     }
     else{

@@ -102,13 +102,16 @@ require_once 'controlador.php';
                                 $u=$d[0];
                                 $s=$d[1];
                                 echo '<tr>';
-                                echo '<td>'.genararInput('input','dni',$u->getId(),'sMSocio').'</td>';
+                                echo '<td>'.generarInput('input','dni',$u->getId(),'sMSocio',$u->getId()).'</td>';
                                 echo '<td>'.$u->getTipo().'</td>';
                                 if($u->getTipo()=='S'){
                                     echo '<td>'.$s->getId().'</td>';
-                                    echo '<td>'.$s->getNombre().'</td>';
-                                    echo '<td>'.($s->getFechaSancion()==null?'':$s->getFechaSancion()).'</td>';
-                                    echo '<td>'.$s->getEmail().'</td>';
+                                    echo '<td>'.generarInput('input','nombre',$s->getNombre(),'sMSocio',$u->getId()).'</td>';
+                                    echo '<td>'.
+                                    ($s->getFechaSancion()==null?'':generarInput('input type="date"','fSancion',
+                                                                                    $s->getFechaSancion(),'sMSocio',$u->getId())).
+                                    '</td>';
+                                    echo '<td>'.generarInput('input type="email"','email',$s->getEmail(),'sMSocio',$u->getId()).'</td>';
                                 }
                                 else{
                                     echo '<td></td>';
@@ -117,8 +120,8 @@ require_once 'controlador.php';
                                     echo '<td></td>';
                                 }
                                 echo '<td>'.
-                                '<button class="btn btn-outline-secondary" type="submit" id="sMSocio" name="sMSocio" value="'.$u->getId().'">Modificar</button>
-                                <button class="btn btn-outline-secondary" type="submit" id="sBSocio" name="sBSocio" value="'.$u->getId().'">Borrar</button>'
+                                generarBotones('sMSocio','sGSocio',$u->getId()).
+                                generarBotones('sBSocio','sCSocio',$u->getId())
                                 .'</td>';
                                 echo '</tr>';
                             }
