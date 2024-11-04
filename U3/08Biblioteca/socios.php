@@ -102,7 +102,7 @@ require_once 'controlador.php';
                                 $u=$d[0];
                                 $s=$d[1];
                                 echo '<tr>';
-                                echo '<td>'.$u->getId().'</td>';
+                                echo '<td>'.genararInput('input','dni',$u->getId(),'sMSocio').'</td>';
                                 echo '<td>'.$u->getTipo().'</td>';
                                 if($u->getTipo()=='S'){
                                     echo '<td>'.$s->getId().'</td>';
