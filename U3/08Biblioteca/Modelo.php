@@ -403,6 +403,60 @@ class Modelo{
         
     }
 
+    function obtenerSocioDni($dni){
+        $resultado=null;
+        try {
+            $consulta=$this->conexion->prepare('SELECT * from socios where upper(us) = upper(?)');
+            $params=array($dni);
+            if($consulta->execute($params)){
+                if($fila=$consulta->fetch()){
+                    $resultado=new Socio($fila['id'],$fila['nombre'],
+                                   $fila['fechaSancion'],$fila['email'],$fila['us']);
+                }
+            }
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+
+        return $resultado;
+    }
+    function modificarUSySocio($u,$s,$dniAntiguo){
+        $resultado=false;
+        try {
+            $this->conexion->beginTransaction();
+            //Modficar usuario
+            $consulta=$this->conexion->prepare('UPDATE usuarios set dni = ? where dni = ?');
+            $params=array($u->getId(),$dniAntiguo); 
+            if($consulta->execute($params) and $consulta->rowCount()==1){
+                //Comprobar si crear socio
+                if($s!=null){
+                    //Modificar Socio
+                    $consulta=$this->conexion->prepare('UPDATE socios set nombre = ?, fechaSancion=?, email=?');
+                    $params=array($s->getNombre(),$s->getEmail(),$s->getUs());
+                    if($consulta->execute($params) and $consulta->rowCount()==1){
+                        $this->conexion->commit();
+                        $resultado=true;
+                    }
+                    else{
+                        $this->conexion->rollBack();
+                    }
+                }
+                else{
+                    $this->conexion->commit();
+                    $resultado=true; 
+                }
+            }
+        } 
+        catch (\PDOException $e) {
+            $this->conexion->rollBack();
+            echo $e->getMessage();
+        }
+        catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
+
     /**
      * Get the value of conexion
      */ 
