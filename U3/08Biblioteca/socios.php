@@ -120,8 +120,8 @@ require_once 'controlador.php';
                                     echo '<td></td>';
                                 }
                                 echo '<td>'.
-                                generarBotones('sMSocio','sGSocio',$u->getId()).
-                                generarBotones('sBSocio','sCSocio',$u->getId())
+                                generarBotones('sMSocio','sGSocio','Modificar','Guardar','sMSocio',$u->getId()).
+                                generarBotones('sBSocio','sCSocio','Borrar','Cancelar','sMSocio',$u->getId())
                                 .'</td>';
                                 echo '</tr>';
                             }

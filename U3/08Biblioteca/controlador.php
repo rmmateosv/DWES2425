@@ -9,6 +9,20 @@ function generarInput($tipo,$nombre,$valor,$boton,$valorBoton){
         return $valor;
     }
 }
+function generarBotones($nombreB1, $nombreB2, $textoB1, $textoB2, $boton, $valorBoton){
+    if(isset($_POST[$boton]) && $_POST[$boton]==$valorBoton){
+        return '<button class="btn btn-outline-secondary" type="submit" name="'.
+        $nombreB2.'" value="'.$valorBoton.'">'.$textoB2.'</button>'; 
+    }
+    else{
+        return '<button class="btn btn-outline-secondary" type="submit" name="'.
+        $nombreB1.'" value="'.$valorBoton.'">'.$textoB1.'</button>';             
+    }
+
+    
+}
+
+
 
 
 session_start();
