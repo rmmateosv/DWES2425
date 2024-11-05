@@ -18,7 +18,7 @@ create table socios(
     nombre varchar(100) not null,
     fechaSancion date default null,
     email varchar(255) not null,
-    us varchar(9) not null,
+    us varchar(9) not null unique,
     foreign key (us) references usuarios(id) on update cascade on delete restrict
 )engine innodb;
 insert into socios values (null,'Carlos Díaz',null,'carlos@gmail.com','11111111A'),

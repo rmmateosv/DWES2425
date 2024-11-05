@@ -458,6 +458,52 @@ class Modelo{
         return $resultado;
     }
 
+    function borrarUsuario($u,$borrarPrestamos){
+        $resultado = false;
+
+        try {
+            $this->conexion->beginTransaction();
+            if($borrarPrestamos){
+                $consulta = $this->conexion->prepare('DELETE from prestamos where socio = 
+                    (SELECT id from socios where us = ?)');
+                $params=array($u->getId());
+                if(!$consulta->execute($params)){
+                    return false;
+                }
+            }
+            //Borrar Socio
+            $consulta = $this->conexion->prepare('DELETE from socios where us = ?');
+            $params=array($u->getId());
+            if($consulta->execute($params)){
+                //Borrar usuario
+                $consulta = $this->conexion->prepare('DELETE from usuarios where id = ?');
+                $params=array($u->getId());
+                if($consulta->execute($params) and $consulta->rowCount()==1){
+                    $this->conexion->commit();
+                    $resultado=true;
+                }
+                else{
+                    $this->conexion->rollBack();
+                }
+            }
+            else{
+                $this->conexion->rollBack();
+            }
+            
+        } 
+        catch (PDOException $th) {
+            //throw $th;
+            $this->conexion->rollBack();
+            echo $th->getMessage();
+        }        
+        catch (\Throwable $th) {
+            //throw $th;
+            echo $th->getMessage();
+        }
+
+        return $resultado;
+    }
+
     /**
      * Get the value of conexion
      */ 
