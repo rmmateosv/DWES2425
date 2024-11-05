@@ -146,11 +146,13 @@ if (isset($_POST['sGSocio']) and $_SESSION['usuario']->getTipo() == 'A') {
         //Modificamos datos
         $u->setId($_POST['dni']);
         //Recuperamos el socio
-        $s=$bd->obtenerSocioDni($_POST['dni']);
-        $s->setNombre($_POST['nombre']);
-        $s->setFechaSancion($_POST['fSancion']);
-        $s->setEmail($_POST['email']);
-        if($bd->modificarUSySocio($u,$s,$_POST['dni'])){
+        $s=$bd->obtenerSocioDni($_POST['sGSocio']);
+        if($s!=null){
+            $s->setNombre($_POST['nombre']);
+            $s->setFechaSancion((isset($_POST['fSancion'])?$_POST['fSancion']:null));
+            $s->setEmail($_POST['email']);
+        }
+        if($bd->modificarUSySocio($u,$s,$_POST['sGSocio'])){
             $mensaje='Usuario modificado';
         }
         else{
@@ -158,4 +160,31 @@ if (isset($_POST['sGSocio']) and $_SESSION['usuario']->getTipo() == 'A') {
         }
     }
 
+}
+if (isset($_POST['sBSocio']) and $_SESSION['usuario']->getTipo() == 'A') {
+    $u=$bd->obtenerUsuarioDni($_POST['sBSocio']);
+    if($u!=null){
+        if($u->getId()==$_SESSION['usuario']->getId()){
+            $error='Error, no puedes borrar el usuario conectado';
+        }
+        else{
+            //Comprobar si el usuario tiene préstamos
+            $prestamos=$bd->obtenerPrestamosSocio($u);
+            if(sizeof($prestamos)>0){
+                //Aviso
+            }
+            else{
+                //Borrar
+                if($bd->borrarUsuario($u)){
+                    $mensaje='Usuario borrado';
+                }
+                else{
+                    $error='Se ha producido un error al borrar el usuario';
+                }
+            }
+        }
+    }
+    else{
+        $error='Error, no existe el usuario';
+    }
 }
