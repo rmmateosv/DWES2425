@@ -192,8 +192,14 @@ if (isset($_POST['sGSocio']) and $_SESSION['usuario']->getTipo() == 'A') {
     }
 
 }
-if (isset($_POST['sBSocio']) and $_SESSION['usuario']->getTipo() == 'A') {
-    $u=$bd->obtenerUsuarioDni($_POST['sBSocio']);
+if ((isset($_POST['sBSocio']) or isset($_POST['sDeleteSocio'])) and $_SESSION['usuario']->getTipo() == 'A') {
+    if(isset($_POST['sBSocio'])){
+        $id=$_POST['sBSocio'];
+    }
+    else{
+        $id=$_POST['sDeleteSocio'];
+    }
+    $u=$bd->obtenerUsuarioDni($id);
     if($u!=null){
         if($u->getId()==$_SESSION['usuario']->getId()){
             $error='Error, no puedes borrar el usuario conectado';
@@ -203,6 +209,12 @@ if (isset($_POST['sBSocio']) and $_SESSION['usuario']->getTipo() == 'A') {
             $prestamos=$bd->obtenerPrestamosSocio($u);
             if(sizeof($prestamos)>0){
                 //Aviso
+                if($bd->borrarUsuario($u,true)){
+                    $mensaje='Usuario borrado';
+                }
+                else{
+                    $error='Se ha producido un error al borrar el usuario';
+                }
             }
             else{
                 //Borrar
