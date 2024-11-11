@@ -1,5 +1,6 @@
 <?php
 require_once 'Modelo.php';
+require_once 'Correo.php';
 
 function generarInput($tipo,$nombre,$valor,$boton,$valorBoton){
     if(isset($_POST[$boton]) && $_POST[$boton]==$valorBoton){
@@ -141,6 +142,8 @@ if (isset($_POST['sCrearSocio']) and $_SESSION['usuario']->getTipo() == 'A') {
                 $s = new Socio(0, $_POST['nombre'], '', $_POST['email'], $_POST['dni']);
                 if ($bd->crearUsuario($u, $s)) {
                     $mensaje = 'Usuario socio creado';
+                    //Enviar correo
+                    $email = new Correo();
                     //Una vez que se crea el socio se dejan de recordar datos
                     unset($_POST['dni']);
                     unset($_POST['tipo']);
