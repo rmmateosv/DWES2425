@@ -1,5 +1,9 @@
 <?php
 require_once 'controlador.php';
+if ($_SESSION['usuario']->getTipo() == 'S') {
+    //Los socios no pueden acceder a esta página
+    header('location:login.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
