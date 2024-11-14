@@ -588,6 +588,39 @@ class Modelo
         }
         return $resultado;
     }
+    public function estadistica($idS){
+        $resultado=array();
+        try {
+            //code...
+            $consulta = $this->conexion->prepare('CALL infoSocio(?)');
+            $params=array($idS);
+            if($consulta->execute($params)){
+                //Tratamos el primer select del procedimiento
+                if($fila=$consulta->fetch()){
+                    $resultado[]=array(1,'Total Préstamos',$fila[0]);
+                    $resultado[]=array(1,'Primer Préstamo',$fila[1]);
+                    $resultado[]=array(1,'Último Préstamo',$fila[2]);
+                }
+                //TRatar los datos del seguno select del procedimineto
+                if($consulta->nextRowset()){
+                    if($fila=$consulta->fetch()){
+                        $resultado[]=array(1,'No Devueltos',$fila[0]);
+                        $resultado[]=array(1,'Devueltos',$fila[1]);
+                        $resultado[]=array(1,'Último Libro',$fila[2]);
+                    }
+                }
+                //TRatar los datos del último select del procedimineto
+                if($consulta->nextRowset()){
+                    while($fila=$consulta->fetch()){
+                        $resultado[]=array(2,$fila[0],$fila[1]);
+                    }
+                }
+            }
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
     /**
      * Get the value of conexion
      */
