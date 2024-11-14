@@ -116,6 +116,11 @@ select (select count(*) from prestamos where socio=pIdS and fechaRD is null),
 				from prestamos where socio = pIdS order by fechaP desc limit 1) 
 			 limit 1)
 		);
+-- Nº de libros leídos por autor
+select  l.autor, count(*)
+	from prestamos p inner join libros l on p.libro = l.id
+    where p.socio = pIdS
+    group by l.autor;
         
 end//
 
@@ -129,3 +134,5 @@ select comprobarSiPrestar(1,2);  -- Préstamos caducado
 select comprobarSiPrestar(2,2);  -- Socio con 2 o más préstamos
 select comprobarSiPrestar(3,2);  -- Correcto
 select comprobarSiPrestar(4,2);  -- Correcto
+
+call infoSocio(14);
