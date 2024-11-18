@@ -2,6 +2,13 @@
 require_once 'Modelo.php';
 require_once 'Correo.php';
 
+function pintarCard($d){
+    echo '<div class="card border-primary mb-1" style="max-width: 10rem;">';
+    echo '<div class="card-header">'. $d[1] . '</div>';
+    echo '<div class="card-body text-success">';
+    echo '<h5 class="card-title">'.$d[2].'</h5>';
+    echo '</div>';
+}
 function generarInput($tipo, $nombre, $valor, $boton, $valorBoton)
 {
     if (isset($_POST[$boton]) && $_POST[$boton] == $valorBoton) {

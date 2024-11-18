@@ -67,14 +67,28 @@ require_once 'controlador.php';
                     </div>
                 </form>
             <?php
-            }
-            else{
+            } else {
+                echo '<h5>Estadística</h5>';
+                echo '<div class="d-flex p-2 bd-highlight">';
                 //Pintar estadística de socio
-                $s=$bd->obtenerSocioDni($_SESSION['usuario']->getId());
+                $s = $bd->obtenerSocioDni($_SESSION['usuario']->getId());
                 $datos = $bd->estadistica($s->getId());
-                foreach($datos as $d){
-                    echo '<p>'.$d[0].'-'.$d[1].'-'.$d[2].'</p>';
+                $autores = false;
+                foreach ($datos as $d) {
+                    if ($d[0] == 1) {
+                        pintarCard($d);
+                    } elseif ($d[0] == 2) {
+                        if (!$autores) {
+                            echo '</div>';
+                            echo '<h5>Libros leídos por autor</h5>';
+                            echo '<div class="d-flex flex-row p-12 bd-highlight">';
+                            $autores = true;
+                        } 
+                        pintarCard($d);
+                    }
+                    echo '</div>';
                 }
+                
             }
             ?>
         </div>
@@ -91,21 +105,19 @@ require_once 'controlador.php';
                             <th>Fecha Préstamos</th>
                             <th>Fecha Devolución</th>
                             <th>Fecha Real Devolución</th>
-                            <?php if($_SESSION['usuario']->getTipo()=='A'){?>
+                            <?php if ($_SESSION['usuario']->getTipo() == 'A') { ?>
                                 <th>Acciones</th>
-                            <?php }?>
+                            <?php } ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        if($_SESSION['usuario']->getTipo()=='A'){
+                        if ($_SESSION['usuario']->getTipo() == 'A') {
                             $prestamos = $bd->obtenerPrestamos();
-                        }
-                        elseif($_SESSION['usuario']->getTipo()=='S'){
+                        } elseif ($_SESSION['usuario']->getTipo() == 'S') {
                             $prestamos = $bd->obtenerPrestamosSocio($_SESSION['usuario']);
-                        }
-                        else{
-                            $prestamos=array();
+                        } else {
+                            $prestamos = array();
                         }
                         foreach ($prestamos as $p) {
                             echo '<tr>';
@@ -117,7 +129,7 @@ require_once 'controlador.php';
                             echo '<td>' .
                                 ($p->getFechaRD() == null ? '' : date('d/m/Y', strtotime($p->getFechaRD()))) .
                                 '</td>';
-                            if($_SESSION['usuario']->getTipo()=='A'){
+                            if ($_SESSION['usuario']->getTipo() == 'A') {
                                 echo '<td>';
                                 echo ($p->getFechaRD() == null ?
                                     '<button class="btn btn-outline-secondary" type="submit" name="pDevolver" 
