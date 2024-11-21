@@ -47,10 +47,15 @@ elseif(isset($_POST['guardar'])){
     }
     $c=$bd->obtenerCorrecion($_POST['prueba'],$_SESSION['alumno']->getId());
     if($c!=null){
-        error;
+        $error='Error, la prueba ya está corregia';
     }
     else{
-        insert
+        if($bd->crearCorreccion($_POST['prueba'],$_SESSION['alumno']->getId(),$_POST['puntos'])){
+            $error='Califiación creada y puntuación del alumno actualizada';
+        }
+        else{
+            $error='Error, no se ha creado la calificación';
+        }
     }
 }
 ?>
