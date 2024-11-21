@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 class LoginC extends Controller
 {
     function vistaLogin(){
-        return view('usuarios/login')
+        return view('usuarios/login');
     }
     function loguear(){
-        
+        echo 'proceso de logueo';
     }
     function vistaRegistro(){
-        echo 'Pantalla de registro';
+        return view('usuarios/registro');
     }
     function registrar(){
         

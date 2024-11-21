@@ -7,13 +7,14 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="" method="post">
+    <form action="{{route('loguear')}}" method="post">
+        @csrf
         Email
         <input type="email" name="email"/>
         Contraseña
         <input type="password" name="ps"/>
         <button type="submit" name="login">Login</button>
-        <a href="">Registrase</a>
+        <a href="{{route('vistaRegistro')}}">Registrase</a>
     </form>
 </body>
 </html>
