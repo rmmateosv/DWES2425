@@ -98,6 +98,7 @@ class Modelo
             //throw $th;
             echo $th->getMessage();
         }
+        return $resultado;
     }
 
     function obtenerPruebasModalidad($idM)
@@ -123,15 +124,37 @@ class Modelo
         }
         return $resultado;
     }
-    function obtenerCorrecion($idP,$idA)
-    {
-        $resultado = array();
+    function obtenerPrueba($idP){
+        $resultado = null;
         try {
-            $consulta = $this->conexion->prepare('SELECT * from correcion where alumno = ? and prueba=?');
-            $params = array($idA,idP);
+            $consulta = $this->conexion->prepare('SELECT * from prueba where id = ?');
+            $params = array($idP);
             if ($consulta->execute($params)) {
                 while ($fila = $consulta->fetch()) {
-                    $resultado[] = new Correccion(
+                    $resultado= new Prueba(
+                        $fila['id'],
+                        $fila['modalidad'],
+                        $fila['fecha'],
+                        $fila['descripcion'],
+                        $fila['puntuacion']
+                    );
+                }
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
+    function obtenerCorrecion($idP, $idA)
+    {
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare('SELECT * from correccion where alumno = ? and prueba=?');
+            $params = array($idA, $idP);
+            if ($consulta->execute($params)) {
+                if ($fila = $consulta->fetch()) {
+                    $resultado = new Correccion(
                         $fila['alumno'],
                         $fila['prueba'],
                         $fila['puntos'],
@@ -145,20 +168,21 @@ class Modelo
         }
         return $resultado;
     }
-function crearCorrecion($idP,$idA,$puntos,$desc)
+    function crearCorreccion($idP, $idA, $puntos, $desc)
     {
         $resultado = false;
-        $this->conexion->beginTransaction();
+        try {
+            $this->conexion->beginTransaction();
             //Insert
-            $consulta = $this->conexion->prepare('INSERT into correcion values(?,?,?,?)');
-            $params = array($idP,$idA,$puntos,$desc);
+            $consulta = $this->conexion->prepare('INSERT into correccion values(?,?,?,?)');
+            $params = array($idA, $idP,$puntos, $desc);
             if ($consulta->execute($params)) {
                 //Comprobamos si se ha insertado 1 fila
                 if ($consulta->rowCount() == 1) {
                     //Update
-                    $consulta = $this->conexion->prepare('UPDATE usuarios set numReservas=numReservas+1 
-                     where idRayuela = ?');
-                    $params = array($usuario);
+                    $consulta = $this->conexion->prepare('UPDATE alumno set puntuacion=puntuacion+?
+                     where id = ?');
+                    $params = array($puntos,$idA);
                     if ($consulta->execute($params) and $consulta->rowCount() == 1) {
                         $this->conexion->commit();
                         $resultado = true;
@@ -175,7 +199,58 @@ function crearCorrecion($idP,$idA,$puntos,$desc)
         }
         return $resultado;
     }
-
+    function obtenerCalificaciones($idA){
+        $resultado = array();
+        try {
+            $consulta = $this->conexion->prepare('SELECT * from correccion as c
+                                                        inner join prueba as p on c.prueba = p.id
+                                                        where alumno = ?');
+            $params = array($idA);
+            if ($consulta->execute($params)) {
+                while ($fila = $consulta->fetch()) {
+                    $resultado[] = new Correccion(
+                        $fila['alumno'],
+                        new Prueba($fila['prueba'],$fila['modalidad'],$fila['fecha'],$fila['descripcion'],$fila['puntuacion']),
+                        $fila['puntos'],
+                        $fila['comentario']
+                    );
+                }
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
+    function finalizarCorreccion($idA){
+        $resultado = false;
+        try {
+            $consulta = $this->conexion->prepare('update alumno set finalizado =true where id = ?');
+            $params = array($idA);
+            if ($consulta->execute($params) and $consulta->rowCount()==1) {
+               $resultado=true; 
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            echo $th->getMessage();
+        }
+        return $resultado;
+    }
+    function obtenerGanadores(){
+        $resultado = array();
+        try {
+            $consulta = $this->conexion->prepare('CALL obtenerGanadores()');
+            if ($consulta->execute()) {
+                while ($fila = $consulta->fetch()) {
+                    $resultado[] = array($fila[0],$fila[1],$fila[2]);
+                }
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            echo $th->getMessage();
+        }
+        return $resultado;  
+    }
     /**
      * Get the value of conexion
      */
