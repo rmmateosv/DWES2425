@@ -1,10 +1,7 @@
 <?php
-require_once 'Modelo.php';
+require_once 'controlador.php';
 
-$bd = new Modelo();
-if ($bd->getConexion() == null) {
-    $error = 'Error, no hay conexión con la BD';
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,26 +20,56 @@ if ($bd->getConexion() == null) {
     if ($bd->getConexion() != null) {
     ?>
         <form action="skills.php" method="post">
+            <?php
+            if(!isset($_SESSION['mod'])){
+            ?>
             <div>
                 <h1 style='color:blue;'>Modalidad</h1>
                 <label for="tienda">Modalidad</label><br />
 
                 <select name="modalidad">
-
+                    <?php
+                    foreach($mod as $m){
+                        echo '<option value="'.$m->getId().'">'.$m->getModalidad().'</option>';
+                    }
+                    ?>
                 </select>
                 <button type="submit" name="selModalidad">Seleccionar Modalidad</button>
             </div>
+            <?php
+            }
+            elseif(!isset($_SESSION['alumno'])){
+            ?>
             <div>
                 <h1 style='color:blue;'>Alumno</h1>
                 <label for="tienda">Alumno</label><br />
                 <select name="alumno">
-
+                    <?php
+                    $alumnos = $bd->obtenerAlumnosModalidad($_SESSION['mod']->getId());
+                    foreach($alumnos as $a){
+                        echo '<option value="'.$a->getId().'">'.$a->getNombre().'</option>';
+                    }
+                    ?>
                 </select>
                 <button type="submit" name="selAlumno">Seleccionar Alumno</button>
             </div>
+            <?php
+            }
+            else{
+            ?>
             <div>
                 <h1 style='color:blue;'>Corrección</h1>
-                <h2 style='color:green;'>Modalidad Seleccionada - Nombre Alumno - Nota:X (Provisional)
+                <h2 style='color:green;'>
+                    <?php echo $_SESSION['mod']->getModalidad().'-'.
+                    $_SESSION['alumno']->getNombre().'-'.
+                    $_SESSION['alumno']->getPuntuacion();
+                    if($_SESSION['alumno']->getFinalizado()){
+                        echo '(Finalidado)';
+                    }
+                    else{
+                        echo '(Provisional)';
+                    }
+                    ?>
                     <button type="submit" name="cambiarM">Cambiar Modalidad</button>
                     <button type="submit" name="cambiarA">Cambiar Alumno</button>
                 </h2>
@@ -56,7 +83,13 @@ if ($bd->getConexion() == null) {
                     <tr>
                         <td>
                             <select id="prueba" name="prueba">
-
+                                <?php
+                                $pruebas = $bd->obtenerPruebasModalidad($_SESSION['mod']->getId());
+                                foreach($pruebas as $p){
+                                    echo '<option value="'.$p->getId().'">'.$p->getDescripcion().'-'.
+                                    $p->getPuntuacion().'</option>';
+                                }
+                                ?>
                             </select>
                         </td>
                         <td><input id="puntos" type="number" name="puntos" value="1" /></td>
@@ -78,6 +111,9 @@ if ($bd->getConexion() == null) {
                 </table>
                 <button type="submit" name="finalizar">Finalizar Corrección</button>
             </div>
+            <?php
+            }
+            ?>
         </form>
     <?php
     }
