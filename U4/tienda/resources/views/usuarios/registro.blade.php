@@ -10,7 +10,12 @@
     <form action="{{route('registrar')}}" method="post">
         @csrf
         Nombre
-        <input type="text" name="nombre" value="{{old('nombre')}}"/><br/>
+        <input type="text" name="nombre" value="{{old('nombre')}}"/>
+        @error('nombre')
+            <h3>Rellena el nombre</h3>
+            <h3>{{$message}}</h3>
+        @enderror
+        <br/>
         Email
         <input type="email" name="email" value="{{old('email')}}"/><br/>
         Contraseña

@@ -15,8 +15,12 @@ class LoginC extends Controller
     function vistaRegistro(){
         return view('usuarios/registro');
     }
-    function registrar(){
-        
+    function registrar(Request $request){
+        //Método que se llama desde el formulario de registro al pulsar en crear
+        //Validar campos
+        $request->validate([
+            'nombre'=>'required'
+        ]);
     }
     function cerrarSesion(){
         echo 'Cerrar sesión';
