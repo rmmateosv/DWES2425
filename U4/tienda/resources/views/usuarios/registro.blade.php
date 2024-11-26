@@ -12,19 +12,33 @@
         Nombre
         <input type="text" name="nombre" value="{{old('nombre')}}"/>
         @error('nombre')
-            <h3>Rellena el nombre</h3>
             <h3>{{$message}}</h3>
         @enderror
         <br/>
         Email
-        <input type="email" name="email" value="{{old('email')}}"/><br/>
+        <input type="email" name="email" value="{{old('email')}}"/>
+        @error('email')
+            <h3>{{$message}}</h3>
+        @enderror
+        <br/>
         Contraseña
-        <input type="password" name="ps"/><br/>
+        <input type="password" name="ps"/>
+        @error('ps')
+            <h3>{{$message}}</h3>
+        @enderror
+        <br/>
         Confimar Contraseña
-        <input type="password" name="ps2"/><br/>
+        <input type="password" name="ps2"/>
+        @error('ps2')
+            <h3>{{$message}}</h3>
+        @enderror
+        <br/>
 
-        <button type="submit" name="crearU">Crear</button>
+        <button type="submit" name="crearU" value="crearU">Crear</button>
         <a href="{{route('vistaLogin')}}">Volver</a>
     </form>
+    @if (session('mensaje'))
+        {{session('mensaje')}}
+    @endif
 </body>
 </html>
