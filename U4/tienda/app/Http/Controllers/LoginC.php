@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -30,7 +31,7 @@ class LoginC extends Controller
             return redirect()->route('inicio');
         }
         else{
-            return back()->with('mensaje','Datos Incorrectas');
+            return back()->with('mensaje','Datos Incorrectos');
         }
         
     }

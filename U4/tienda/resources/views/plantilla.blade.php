@@ -11,16 +11,22 @@
 </head>
 <body>
     <div class="container">
-        <div class="rosa">
-            <!-- menú e info us -->
-            <ul>
-                <li><a href="{{route('inicio')}}">Productos</a></li>
-                <li><a href="">Pedidos</a></li>
-                <li><a href="">Cesta</a></li>
-                <li>{{Auth::user()->name}}</li>
-                <li><a href="">Salir</a></li>
-            </ul>
-        </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- menú e info us -->
+                        <li class="nav-item"><a href="{{route('inicio')}}" class="nav-link" >Productos</a></li>
+                        <li class="nav-item"><a href="" class="nav-link" >Pedidos</a></li>
+                        <li class="nav-item"><a href="" class="nav-link" >Cesta</a></li>
+                    </ul>
+                    <div  class="d-flex">
+                        <span  class="nav-link">{{Auth::user()->name}}</span>
+                        <a href="" class="nav-link">Salir</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
         <div>
             <!-- mensajes -->
             @yield('error')

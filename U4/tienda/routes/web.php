@@ -20,6 +20,6 @@ Route::controller(LoginC::class)->group(
 
 Route::controller(ProductosC::class)->group(
     function(){
-        Route::get('/inicio', 'verProductos')->name('inicio')->middleware('auth');
+        Route::get('/inicio', 'verProductos')->name('inicio');
     }
 );
