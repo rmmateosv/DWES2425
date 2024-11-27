@@ -13,8 +13,26 @@ class LoginC extends Controller
     function vistaLogin(){
         return view('usuarios/login');
     }
-    function loguear(){
-        echo 'proceso de logueo';
+    function loguear(Request $request){
+        //Validar
+        $request->validate(
+            [   'email' =>'required|email:rfc,dns',
+                'ps'=>'required'
+            ]
+        );
+        //Crear array con us y ps
+        $credenciales = ['email'=>$request->email,'password'=>$request->ps];
+        //Validación de credenciales
+        if(Auth::attempt($credenciales)){
+            //Reinciamos la sesión
+            $request->session()->regenerate();
+            //Redirigimos a inicio
+            return redirect()->route('inicio');
+        }
+        else{
+            return back()->with('mensaje','Datos Incorrectas');
+        }
+        
     }
     function vistaRegistro(){
         return view('usuarios/registro');

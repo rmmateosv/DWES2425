@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="container d-flex justify-content-center align-items-center vh-100">
-        <img src="{{asset('img/logo.jpg')}}" alt="logo">
+        
     <form action="{{route('registrar')}}" method="post" class="row g-3">
         @csrf
         <div class="row-md-3">

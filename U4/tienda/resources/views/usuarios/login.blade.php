@@ -18,16 +18,28 @@
         <div class="row-md-3">
             <label for="email" class="form-label" >Email</label><br/>
             <input type="email" name="email" class="form-control"/>
+            @error('email')
+                <p class="text-danger">{{$message}}</p>
+            @enderror
         </div>
         <div class="row-md-3">
             <label for="ps" class="form-label" >Contraseña</label><br/>
             <input type="password" name="ps" class="form-control"/>
+            @error('ps')
+                <p class="text-danger">{{$message}}</p>
+            @enderror
         </div>
         <div class="row-md-3">
             <button type="submit" name="login" class="btn btn-outline-secondary">Login</button>
             <a href="{{route('vistaRegistro')}}" class="btn btn-outline-secondary">Registrase</a>
         </div>
     </form>
+    <div class="alert">
+        @if (session('mensaje'))
+            <p class="text-danger">{{session('mensaje')}}</p>
+        @endif
     </div>
+</div>
+    
 </body>
 </html>
