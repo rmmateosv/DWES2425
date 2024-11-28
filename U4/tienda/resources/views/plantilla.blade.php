@@ -22,7 +22,7 @@
                     </ul>
                     <div  class="d-flex">
                         <span  class="nav-link">{{Auth::user()->name}}</span>
-                        <a href="" class="nav-link">Salir</a>
+                        <a href="{{route('cerrar')}}" class="nav-link">Salir</a>
                     </div>
                 </div>
             </div>

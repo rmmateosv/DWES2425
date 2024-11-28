@@ -10,15 +10,15 @@
 </head>
 <body>
     <div class="container">
-        <div class="row justify-content-md-center"">
+        <div class="row justify-content-md-center">
             <div class="col  col-lg-5">
                 <img src="{{asset('img/logo.jpg')}}" alt="logo">
             </div>
         </div>
         <form action="{{route('loguear')}}" method="post" class="row">
             @csrf
-            <div class="row">
-                <div class="col">
+            <div class="row justify-content-md-center">
+                <div class="col col-lg-3">
                     <label for="email" class="form-label" >Email</label><br/>
                     <input type="email" name="email" class="form-control"/>
                     @error('email')
@@ -26,8 +26,8 @@
                     @enderror
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
+            <div class="row justify-content-md-center">
+                <div class="  col-lg-3">
                     <label for="ps" class="form-label" >Contraseña</label><br/>
                     <input type="password" name="ps" class="form-control"/>
                     @error('ps')
@@ -35,8 +35,8 @@
                     @enderror
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
+            <div class="row justify-content-md-center">
+                <div class="col  col-lg-3">
                     <button type="submit" name="login" class="btn btn-outline-secondary">Login</button>
                     <a href="{{route('vistaRegistro')}}" class="btn btn-outline-secondary">Registrase</a>
                 </div>

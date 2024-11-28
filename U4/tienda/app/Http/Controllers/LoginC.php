@@ -67,6 +67,7 @@ class LoginC extends Controller
         }
     }
     function cerrarSesion(){
-        echo 'Cerrar sesión';
+        Auth::logout();
+        return redirect()->route('inicio');
     }
 }

@@ -5,7 +5,7 @@ use App\Http\Controllers\ProductosC;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('inicio');
+    return redirect()->route('inicio');
 });
 
 Route::controller(LoginC::class)->group(
@@ -20,6 +20,6 @@ Route::controller(LoginC::class)->group(
 
 Route::controller(ProductosC::class)->group(
     function(){
-        Route::get('/inicio', 'verProductos')->name('inicio');
+        Route::get('inicio', 'verProductos')->name('inicio');
     }
 );

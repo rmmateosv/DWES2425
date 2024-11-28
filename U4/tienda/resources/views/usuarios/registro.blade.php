@@ -43,7 +43,7 @@
         </div>
         <div class="row-md-3">
             <button type="submit" name="crearU" value="crearU" class="btn btn-outline-secondary">Crear</button>
-            <a href="{{route('vistaLogin')}}" class="btn btn-outline-secondary">Volver</a>
+            <a href="{{route('login')}}" class="btn btn-outline-secondary">Volver</a>
         </div>
     </form>
     @if (session('mensaje'))
