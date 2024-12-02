@@ -65,4 +65,10 @@ class ProductosC extends Controller
         }
 
     }
+    function verCesta(){
+        //Obtener los productos en el carrito del usuario
+        $productosC=Carrito::where('user_id',Auth::user()->id)->get();
+        //Cargar la vista de la cesta
+        return view('productos/verCesta',compact('productosC'));
+    }
 }

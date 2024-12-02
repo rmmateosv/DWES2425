@@ -45,4 +45,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    //Relación 1:N entre usuario y carrito
+    //Un usuario puede tener varios registros en carrito
+    function productosCarrito(){
+        return $this->hasMany(Carrito::class)->get();
+    }
+    //Relación 1:N entre usuario y pedido
+    //Un usuario puede tener varios registros en pedidos
+    function pedidos(){
+        return $this->hasMany(Pedido::class)->get();
+    }
 }

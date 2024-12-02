@@ -22,5 +22,6 @@ Route::controller(ProductosC::class)->group(
     function(){
         Route::get('inicio', 'verProductos')->name('inicio');
         Route::post('addCarrito', 'addCarrito')->name('addCarrito');
+        Route::get('cesta','verCesta')->name('cesta');
     }
 );
