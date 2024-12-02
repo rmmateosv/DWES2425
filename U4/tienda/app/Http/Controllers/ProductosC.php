@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carrito;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ProductosC extends Controller
 {
@@ -29,7 +31,30 @@ class ProductosC extends Controller
         $p=Producto::find($request->btnAdd);
         if($p!=null){
             if($p->stock>0){
-
+                //Comprobamos si el producto está ya en la cesta
+                $produtoC = Carrito::where('producto_id',$p->id)
+                                ->where('user_id',Auth::user()->id)->first();
+                if($produtoC==null){
+                    //Crear producto en carrito
+                    $produtoC = new Carrito();
+                    $produtoC->producto_id=$p->id;
+                    $produtoC->cantidad=1;
+                    $produtoC->precioU=$p->precio;
+                    $produtoC->user_id=Auth::user()->id;
+                }else{
+                    //Incrementar en 1 la cantidad
+                    $produtoC->cantidad+=1;
+                    //Actualizamos el precio
+                    $produtoC->precioU=$p->precio;
+                }
+                //Guardamos cambios: Hacemos un INSERT o un UPADTE
+                if($produtoC->save()){
+                    return back()->with('mensaje','Producto añadido a la cesta');
+                }
+                else{
+                    return back()->with('error','No se ha añadio el producto  a la cesta');
+                }
+                
             }
             else{
                 return back()->with('error','No hay stock del producto '.$p->nombre);

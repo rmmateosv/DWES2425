@@ -18,7 +18,7 @@
                     <!-- menú e info us -->
                         <li class="nav-item"><a href="{{route('inicio')}}" class="nav-link" >Productos</a></li>
                         <li class="nav-item"><a href="" class="nav-link" >Pedidos</a></li>
-                        <li class="nav-item"><a href="" class="nav-link" >Cesta</a></li>
+                        <li class="nav-item"><a href="" class="nav-link" >Cesta ({{$numProd}})</a></li>
                     </ul>
                     <div  class="d-flex">
                         <span  class="nav-link">{{Auth::user()->name}}</span>
