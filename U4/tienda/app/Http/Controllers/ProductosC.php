@@ -85,7 +85,7 @@ class ProductosC extends Controller
                 return back()->with('error', 'El producto no está en el carrito');
             }
         }
-        elseif(isset($request->cantidad)){
+        elseif(isset($request->cantidad) and $request->cantidad>=0){
             //Comprobar si se ha modificado la cantidad del producto
             $p= Carrito::find($idP);
             if($p->cantidad!=$request->cantidad){
@@ -104,7 +104,8 @@ class ProductosC extends Controller
                     return back()->with('error', 'No hay stock suficiente');
                 }
             }
-            return back();
         }
+        return back();
+        
     }
 }

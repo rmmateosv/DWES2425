@@ -33,14 +33,14 @@
                         <td>{{$p->id}}</td>
                         <td>{{$p->producto->nombre}}</td>
                         <td>{{$p->precioU}}</td>
-                        <td><input type="number" name="cantidad" value="{{$p->cantidad}}" onchange="submit()"/></td>
+                        <td><input type="number" name="cantidad" min="1" value="{{$p->cantidad}}" onchange="submit()"/></td>
                         <td>{{$p->cantidad*$p->precioU}}</td>
                         <td><img src="{{asset('img/productos/'.$p->producto->imagen)}}" 
                             alt="{{$p->id}}" width="30px"></td>
                         <td>
                             <button type="submit" name="btnBorrar" value="{{$p->id}}">
-                                <img src="{{asset('img/cesta.png')}}" 
-                                alt="cesta" width="30px">
+                                <img src="{{asset('img/borrar.png')}}" 
+                                alt="cesta" width="20px">
                             </button>
                         </td>
                     </form>
