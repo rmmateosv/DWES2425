@@ -12,7 +12,10 @@
 @endif
 
 @section('main')
-   
+        <form action="{{route('crearPedido')}}" method="post">
+            @csrf
+            <button type="submit">Comprar</button>
+        </form>
         <table class="table">
             <thead>
                 <tr>

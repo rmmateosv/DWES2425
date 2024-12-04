@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Carrito;
+use App\Models\Pedido;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductosC extends Controller
 {
@@ -107,5 +109,51 @@ class ProductosC extends Controller
         }
         return back();
         
+    }
+    function crearPedido(Request $request){
+        //Comprobar que hay stock y que los precios no han cambiado
+        //Informar en caso necesario
+        $carrito = Carrito::where('user_id',Auth::user()->id)->get();
+        foreach($carrito as $c){
+            //Comprobar si ha cambiado el precio
+            if($c->precioU!=$c->producto->precio){
+                return back()->
+                with('error','Error, el producto '.$c->producto->nombre.'ha cambiado de precio. Borra el producto de la cesta para poder crear el pedido');
+            }
+            //Comprobar si hay stock
+            if($c->cantidad>$c->producto->stock){
+                return back()->
+                with('error','Error, no hay stock para el producto '.$c->producto->nombre.'Borra el producto de la cesta para poder crear el pedido');
+            }
+        }
+        //Convertir cada línea del carrito en un pedido
+        //y vaciar el carrito
+        //También hay que modficiar el stock
+        //Vamos a hacer varios insert, varios update y varios delete
+        //por lo que tenemos que hacer una transacción
+        try {
+            DB::transaction(function () {
+               //Recuperamos carrito
+               $carrito=Carrito::where('user_id',Auth::user()->id)->get(); 
+               foreach($carrito as $c){
+                    //Crear pedido
+                    $p = new Pedido();
+                    $p->user_id=Auth::user()->id;
+                    $p->producto_id=$c->producto_id;
+                    $p->cantidad=$c->cantidad;
+                    $p->precioU=$c->producto->precio;
+                    if($p->save()){
+                        //Modificar stock del producto
+                        $c->producto->stock-=$c->catidad;
+                        if($c->producto->save()){
+                            //Borrar este producto del carrito
+                            $c->delete(); 
+                        }
+                    }
+               }
+            });
+        } catch (\Throwable $th) {
+            return back()->with('error',$th->getMessage());
+        }
     }
 }
