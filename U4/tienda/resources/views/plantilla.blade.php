@@ -17,7 +17,7 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <!-- menú e info us -->
                         <li class="nav-item"><a href="{{route('inicio')}}" class="nav-link" >Productos</a></li>
-                        <li class="nav-item"><a href="" class="nav-link" >Pedidos</a></li>
+                        <li class="nav-item"><a href="{{route('pedidos')}}" class="nav-link" >Pedidos</a></li>
                         <li class="nav-item"><a href="{{route('cesta')}}" class="nav-link" >Cesta ({{sizeof(Auth::user()->productosCarrito())}})</a></li>
                     </ul>
                     <div  class="d-flex">

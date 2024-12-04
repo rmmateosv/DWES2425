@@ -144,16 +144,25 @@ class ProductosC extends Controller
                     $p->precioU=$c->producto->precio;
                     if($p->save()){
                         //Modificar stock del producto
-                        $c->producto->stock-=$c->catidad;
+                        $c->producto->stock-=$c->cantidad;
                         if($c->producto->save()){
                             //Borrar este producto del carrito
                             $c->delete(); 
                         }
                     }
-               }
+               } 
             });
+            return redirect()->route('pedidos')->with('mensaje','Pedidos creados');
         } catch (\Throwable $th) {
             return back()->with('error',$th->getMessage());
         }
+        
+    }
+    function verPedidos(){
+        //Recuperar los pedidos del usuario
+        $pedidos=Pedido::where('user_id',Auth::user()->id)->get();
+        //Redirigir a vista verPedidos
+        return view('productos/verPedidos',compact('pedidos'));
+
     }
 }

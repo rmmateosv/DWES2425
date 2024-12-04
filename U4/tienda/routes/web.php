@@ -25,5 +25,6 @@ Route::controller(ProductosC::class)->group(
         Route::get('cesta','verCesta')->name('cesta');
         Route::post('tratarCarrito/{idP}','tratarCarrito')->name('tratarCarrito');
         Route::post('crearPedido','crearPedido')->name('crearPedido');
+        Route::get('pedidos', 'verPedidos')->name('pedidos');
     }
 );
