@@ -7,6 +7,8 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>CITAS</h1>
+    <h2>Crear Cita</h2>
     <form action="{{route('crearC')}}" method="post">
         @csrf
         <input type="date" name="fecha" value="{{date('Y-m-d')}}"/>
@@ -26,7 +28,8 @@
     @if (session('mensaje'))
     <p style="color:red;">{{session('mensaje')}}</p>
     @endif
-    <table>
+    <h2>Citas</h2>
+    <table border="1" width="50%">
         <tr>
             <td>Id</td>
             <td>Fecha</td>
