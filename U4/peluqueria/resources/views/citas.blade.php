@@ -46,7 +46,7 @@
                 <form action="{{route('crearDetalle',$c->id)}}" method="get">
                     @csrf
                     <button type="submit" name="detalleC">Detalle</button>
-                <form>
+                </form>
                 <form action="{{route('borrarC',$c->id)}}"  method="post">
                     @csrf
                     @method('DELETE')
