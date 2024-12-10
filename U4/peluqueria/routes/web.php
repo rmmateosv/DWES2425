@@ -4,7 +4,7 @@ use App\Http\Controllers\CitaC;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('verCitas');
 });
 
 
@@ -14,6 +14,7 @@ Route::controller(CitaC::class)->group(
         Route::put('citas/{id}','modificarCita')->name('modificarC');
         Route::delete('citas/{id}','borrarCita')->name('borrarC');
         Route::post('citas','crearCita')->name('crearC');
-        Route::get('detalle/{id}','crearDetalle')->name('crearDetalle');
+        Route::get('detalle/{id}','cargarDetalle')->name('cargarDetalle');
+        Route::post('detalle/{id}','insertarDetalle')->name('crearD');
     }
 );
