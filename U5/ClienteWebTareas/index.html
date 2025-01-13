@@ -9,7 +9,7 @@
 <body>
     <form action="">
         <h2>Crear Tarea</h2>
-        <input type="date" name="fecha" id="fecha"/>
+        <input type="date" name="fecha" id="fecha" required/>
         <input type="time" name="hora" id="hora"/>
         <input type="text" name="desc" id="desc" placeholder="descripción"/>
         <select name="prioridad" id="prioridad">
@@ -23,6 +23,59 @@
     <table name="tabla" id="tabla">
     </table>
     <script>
+        function crearTarea(){
+            const url='http://localhost/DWES2425/U5/APITareas/public/tareas';
+            if(document.getElementById('fecha').value=='' || 
+               document.getElementById('hora').value=='' || 
+               document.getElementById('desc').value==''  ||
+               document.getElementById('prioridad').value==''){
+                alert('Error: Campos no pueden estar vacíos');
+            }
+            else{
+                const datos = {
+                    fecha:document.getElementById('fecha').value,
+                    hora:document.getElementById('hora').value,
+                    descripcion:document.getElementById('desc').value,
+                    prioridad:document.getElementById('prioridad').value
+                }
+                axios.post(url,datos)
+                .then(response=> {
+                    const respuesta = response.data;
+                    alert(`Tarea con id ${respuesta.tarea.id} creada`);
+                    cargarTareas();
+                    //Limpiar formulario
+                    document.getElementById('fecha').value='';
+                    document.getElementById('hora').value='';
+                    document.getElementById('desc').value='' ;
+                    document.getElementById('prioridad').value='Media';
+
+                })
+                .catch(
+                    error=>{
+                        console.error(error.response.data);
+                        alert(`Error:${error.response.data} Estado:${error.response.status}`);
+                    }
+                );
+            }
+            
+        }
+        function finalizarTarea(id){
+            const url=`http://localhost/DWES2425/U5/APITareas/public/tareas/${id}`;
+            datos={
+                finalizada:true
+            }
+            axios.put(url,datos)
+            .then(response=>{
+                alert(response.data.mensaje);
+                cargarTareas();
+            })
+            .catch(error=>{
+                console.error(error.response.data);
+                alert(`Error:${error.response.data} Estado:${error.response.status}`);
+                }
+            );
+
+        }
         function cargarTareas(){
             const url='http://localhost/DWES2425/U5/APITareas/public/tareas';
             axios.get(url)
@@ -40,14 +93,17 @@
                             <td>${t.descripcion}</td>
                             <td>${t.finalizada}</td>
                             <td>
-                            <button type="button" name="finalizar" onclick="finalizarTarea()">Finalizar</button>
-                            <button type="button" name="borrar" onclick="borrarTarea()">Borrar</button>
+                            <button type="button" name="finalizar" onclick="finalizarTarea(${t.id})">Finalizar</button>
+                            <button type="button" name="borrar"  onclick="borrarTarea(${t.id})">Borrar</button>
                             </td>`;
                             tabla.appendChild(fila);
                         });
                     }
                 )
-                .catch()
+                .catch(error=>{
+                    console.error(error.response.data);
+                    alert(`Error:${error.response.data} Estado:${error.response.status}`);
+                })
         }
         window.onload=cargarTareas();
     </script>
