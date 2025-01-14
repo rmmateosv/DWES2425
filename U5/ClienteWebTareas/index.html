@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="axios/dist/axios.min.js"></script>
     <title>Mis Tareas</title>
 </head>
+
 <body>
     <form action="">
         <h2>Crear Tarea</h2>
-        <input type="date" name="fecha" id="fecha" required/>
-        <input type="time" name="hora" id="hora"/>
-        <input type="text" name="desc" id="desc" placeholder="descripción"/>
+        <input type="date" name="fecha" id="fecha" required />
+        <input type="time" name="hora" id="hora" />
+        <input type="text" name="desc" id="desc" placeholder="descripción" />
         <select name="prioridad" id="prioridad">
             <option>Alta</option>
             <option selected="selected">Media</option>
@@ -23,64 +25,79 @@
     <table name="tabla" id="tabla">
     </table>
     <script>
-        function crearTarea(){
-            const url='http://localhost/DWES2425/U5/APITareas/public/tareas';
-            if(document.getElementById('fecha').value=='' || 
-               document.getElementById('hora').value=='' || 
-               document.getElementById('desc').value==''  ||
-               document.getElementById('prioridad').value==''){
+        function crearTarea() {
+            const url = 'http://localhost/DWES2425/U5/APITareas/public/tareas';
+            if (document.getElementById('fecha').value == '' ||
+                document.getElementById('hora').value == '' ||
+                document.getElementById('desc').value == '' ||
+                document.getElementById('prioridad').value == '') {
                 alert('Error: Campos no pueden estar vacíos');
             }
-            else{
+            else {
                 const datos = {
-                    fecha:document.getElementById('fecha').value,
-                    hora:document.getElementById('hora').value,
-                    descripcion:document.getElementById('desc').value,
-                    prioridad:document.getElementById('prioridad').value
+                    fecha: document.getElementById('fecha').value,
+                    hora: document.getElementById('hora').value,
+                    descripcion: document.getElementById('desc').value,
+                    prioridad: document.getElementById('prioridad').value
                 }
-                axios.post(url,datos)
-                .then(response=> {
-                    const respuesta = response.data;
-                    alert(`Tarea con id ${respuesta.tarea.id} creada`);
-                    cargarTareas();
-                    //Limpiar formulario
-                    document.getElementById('fecha').value='';
-                    document.getElementById('hora').value='';
-                    document.getElementById('desc').value='' ;
-                    document.getElementById('prioridad').value='Media';
+                axios.post(url, datos)
+                    .then(response => {
+                        const respuesta = response.data;
+                        alert(`Tarea con id ${respuesta.tarea.id} creada`);
+                        cargarTareas();
+                        //Limpiar formulario
+                        document.getElementById('fecha').value = '';
+                        document.getElementById('hora').value = '';
+                        document.getElementById('desc').value = '';
+                        document.getElementById('prioridad').value = 'Media';
 
+                    })
+                    .catch(
+                        error => {
+                            console.error(error.response.data);
+                            alert(`Error:${error.response.data} Estado:${error.response.status}`);
+                        }
+                    );
+            }
+
+        }
+        function finalizarTarea(id) {
+            const url = `http://localhost/DWES2425/U5/APITareas/public/tareas/${id}`;
+            datos = {
+                finalizada: true
+            }
+            axios.put(url, datos)
+                .then(response => {
+                    alert(response.data.mensaje);
+                    cargarTareas();
                 })
-                .catch(
-                    error=>{
+                .catch(error => {
+                    console.error(error.response.data);
+                    alert(`Error:${error.response.data} Estado:${error.response.status}`);
+                }
+                );
+
+        }
+        function borrarTarea(id) {
+            const url = `http://localhost/DWES2425/U5/APITareas/public/tareas/${id}`;
+            if (confirm(`¿Estás seguro de eliminar la tarea con id ${id}?`)) {
+                axios.delete(url)
+                    .then(response => {
+                        alert('Tarea Borrada');
+                        cargarTareas();
+                    })
+                    .catch(error => {
                         console.error(error.response.data);
                         alert(`Error:${error.response.data} Estado:${error.response.status}`);
                     }
-                );
+                    );
             }
-            
         }
-        function finalizarTarea(id){
-            const url=`http://localhost/DWES2425/U5/APITareas/public/tareas/${id}`;
-            datos={
-                finalizada:true
-            }
-            axios.put(url,datos)
-            .then(response=>{
-                alert(response.data.mensaje);
-                cargarTareas();
-            })
-            .catch(error=>{
-                console.error(error.response.data);
-                alert(`Error:${error.response.data} Estado:${error.response.status}`);
-                }
-            );
-
-        }
-        function cargarTareas(){
-            const url='http://localhost/DWES2425/U5/APITareas/public/tareas';
+        function cargarTareas() {
+            const url = 'http://localhost/DWES2425/U5/APITareas/public/tareas';
             axios.get(url)
                 .then(
-                    response=>{
+                    response => {
                         const tareas = response.data;
                         const tabla = document.getElementById('tabla');
                         tabla.innerHTML = '<tr><td>ID</td><td>Fecha</td><td>Hora</td><td>Prioridad</td><td>Descripción</td><td>Finalizada</td></tr>';
@@ -100,12 +117,13 @@
                         });
                     }
                 )
-                .catch(error=>{
+                .catch(error => {
                     console.error(error.response.data);
                     alert(`Error:${error.response.data} Estado:${error.response.status}`);
                 })
         }
-        window.onload=cargarTareas();
+        window.onload = cargarTareas();
     </script>
 </body>
+
 </html>
