@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="axios/dist/axios.min.js"></script>
+</head>
+<body>
+<form action="">
+    <label for="email">Email</label><br/>
+    <input type="email" id="email" placeholder="email@email.com" required/><br/>
+    <label for="ps">Contraseña</label><br/>
+    <input type="password" id="ps" required/><br/>
+    <button type="button" onclick="login()">Entrar</button>
+</form>  
+<script>
+    function login(){
+        const url = 'http://localhost/DWES2425/U5/APITienda/public/api/login';
+        const datos = {
+            email:document.getElementById('email').value,
+            ps:document.getElementById('ps').value
+        };
+        axios.post(url,datos)
+        .then(response=>{
+             //Redirigir a tienda
+            const token = response.data.token;
+            const us = response.data.nombreUS;
+            //Guardar token y usuario en el almacenamiento local del navegador
+            localStorage.setItem('token',token);
+            localStorage.setItem('usuario',us);
+            window.location.href='tienda.html';
+        })
+        .catch(error=>{
+            alert('Login Incorrecto')
+        });
+    }
+</script>
+</body>
+</html>
