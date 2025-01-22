@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <script src="axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <form action="">
+        <label for="nombre">Nombre</label><br/>
+        <input type="text" id="nombre" placeholder="Nombre" required/><br/>
+        <label for="email">Email</label><br/>
+        <input type="email" id="email" placeholder="email@email.com" required/><br/>
+        <label for="ps">Contraseña</label><br/>
+        <input type="password" id="ps" required/><br/>
+        <label for="ps2">Repetir Contraseña</label><br/>
+        <input type="password" id="ps2" required/><br/>
+        <button type="button" onclick="registro()">Entrar</button>
+    </form> 
+    <a href="login.html">Volver</a> 
+</body>
+<script>
+    function registro(){
+        const url = 'http://localhost/DWES2425/U5/APITienda/public/api/registro';
+        const datos = {
+            nombre : document.getElementById('nombre').value,
+            email: document.getElementById('email').value,
+            ps: document.getElementById('ps').value,
+            ps2: document.getElementById('ps2').value
+        }
+
+        axios.post(url,datos)
+        .then(response=>{
+            alert('Usuario registrado');
+            window.location.href='login.html';
+        })
+        .catch(error=>{
+            console.error(error)
+            alert('Error '+error.response.status+':'+error.response.data.message);
+        });
+    }
+</script> 
+</html>

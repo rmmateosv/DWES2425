@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda</title>
+    <script src="axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div>
+        <span id="nombreUS"></span>
+        <u  onclick="salir()">Salir</u>
+    </div>
+    <div style="display: flex;">
+        <div>
+            <h3>Productos</h3>
+            <table id="productos">
+
+            </table>
+        </div>
+        <div>
+            <h3>Pedidos</h3>
+            <table id="pedidos"></table>
+
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+    //REcueperar el token y el nombre de usuario
+    const token = localStorage.getItem('token');
+    if(token==null){
+        window.location.href='login.html';
+    }
+    else{
+        const nombreUS=localStorage.getItem('usuario')
+        document.getElementById('nombreUS').textContent=`${nombreUS}`
+
+        //Todas las peticiones van a ir con token de autenticación
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+        cargarProductos();
+    }
+    function cargarProductos(){
+        const url = 'http://localhost/DWES2425/U5/APITienda/public/api/productos'
+        axios.get(url)
+        .then(response=>{
+          
+           
+        })
+        .catch(error=>{
+            console.error(error)
+            alert('Error al cargar los productos');
+        });
+    }
+    function salir(){
+        const url = 'http://localhost/DWES2425/U5/APITienda/public/api/logout'
+        
+        axios.post(url)
+        .then(response=>{
+           alert('salir')
+           localStorage.removeItem('token')
+           localStorage.removeItem('usuario')
+           window.location.href='login.html'
+           
+        })
+        .catch(error=>{
+            console.error(error)
+            alert('Error: No se ha cerrado sesión');
+        });
+    }
+</script>
+</html>
