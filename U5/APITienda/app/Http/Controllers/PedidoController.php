@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PedidoResource;
 use App\Models\Pedido;
 use App\Models\Producto;
 use App\Models\User;
@@ -21,7 +22,8 @@ class PedidoController
         try {
             //Devolver pedidos de usuario logueado
             //return User::find(Auth::user()->id)->pedidos();
-            return Pedido::where('user_id',Auth::user()->id)->get();
+            $pedidos= Pedido::where('user_id',Auth::user()->id)->get();
+            return PedidoResource::collection($pedidos);
         } catch (\Throwable $th) {
             return response()->json('Error:'.$th->getMessage(),500);
         }
