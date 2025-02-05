@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div style="display: flex; flex-direction: row; justify-content:space-evenly;">
+        <div>
+            <h3>Citas</h3>
+            <table id="citas" border=1 style="border-collapse: collapse; "> 
+    
+            </table>
+        </div>
+        <div>
+            <h3>Detalle Cita</h3>
+            <table id="detalle"  border=1 style="border-collapse: collapse;"> 
+                
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        const urlAPI = 'http://localhost/DWES2425/U5/APIPeluqueria/public/';
+        cargarCitas();
+        function verDetalle(id){
+            const url = urlAPI+'detalleCita'
+            const datos = {
+                id: id
+            }
+            axios.get(url,{params:datos})
+            .then(response=>{
+                const tabla = document.getElementById('detalle');
+                tabla.innerHTML = '<tr><td>Id</td><td>Cita</td><td>Servicio</td><td>Precio</td></tr>';
+                const detalle = response.data;
+                detalle.forEach(d => {
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `
+                    <td>${d.id}</td>
+                    <td>${d.cita_id}</td>
+                    <td>${d.servicio_id}</td>
+                    <td>${d.precio}</td>`;
+                    tabla.appendChild(fila);
+                });
+            })
+            .catch(error=>{
+                console.log('Error:'+error.response.data)
+            })
+        }
+        function cargarCitas(){
+            const url = urlAPI+'citas'
+            axios.get(url)
+            .then(response=>{
+                const tabla = document.getElementById('citas');
+                tabla.innerHTML = '<tr><td>ID</td><td>Fecha</td><td>Hora</td><td>Cliente</td><td>Finalizada</td><td>Acciones</td></tr>';
+                const citas = response.data;
+                citas.forEach(c => {
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `<td>${c.id}</td>
+                    <td>${c.fecha}</td>
+                    <td>${c.hora}</td>
+                    <td>${c.cliente}</td>
+                    <td>${c.finalizada}</td>
+                    <td>
+                    <button type="button" name="detalle" onclick="verDetalle(${c.id})">Detalle</button>
+                    </td>`;
+                    tabla.appendChild(fila);
+                });
+            })
+            .catch(error=>{
+                console.log('Error:'+error.response.data)
+            });
+        }
+    </script>
+</body>
+</html>

@@ -63,7 +63,7 @@
         }
         function finalizarTarea(id) {
             const url = `http://localhost/DWES2425/U5/APITareas/public/tareas/${id}`;
-            datos = {
+            const datos = {
                 finalizada: true
             }
             axios.put(url, datos)
