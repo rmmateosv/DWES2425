@@ -5,7 +5,7 @@ const { DataTypes } = require('sequelize');
 const bd = require('../config/database');
 
 //DEfinimos el modelo de oferta
-const Oferta = bd.define('Oferta',
+const Oferta = bd.define('ofertas',
     {
         id:{
             type: DataTypes.INTEGER,
@@ -24,7 +24,7 @@ const Oferta = bd.define('Oferta',
             type:DataTypes.INTEGER,
             allowNull:false,
             references:{
-                model:'usuarios',
+                model:'usuarios', //Nombre de la tabla
                 key:'id'
             },
             onUpdate: 'CASCADE',
@@ -32,6 +32,8 @@ const Oferta = bd.define('Oferta',
         }
     },
     {
-        tablename:'ofertas',
+        //tablename:'ofertas',
         timestamps:true
     });
+
+    module.exports=Oferta;
