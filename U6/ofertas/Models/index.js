@@ -1,16 +1,16 @@
-//Importar Sequelize
+//Importar sequelize 
 const {Sequelize} = require('sequelize');
 
-//Importar configuración BD
-const bd = require('../config/database')
+//Importar configuracion de la base de datos
+const bd = require('../config/database');
 
 //Importar el modelo de Usuario
-const Usuario = require('./usuario')
+const Usuario = require('./usuario');
 
-//Definir relaciones
+//Definir relaciones 
 
-//Eportar conexión, modelos y relaciones
+//exportar conexion , modelo y relaciones
 module.exports = {
-    bd,
-    Usuario
-}
+  bd,
+  Usuario,
+};
