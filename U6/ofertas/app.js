@@ -3,6 +3,10 @@ const express = require('express');
 
 //Incializar express
 const app = express();
+//Añadir middelware para manejar datos de solicituos en body con JSON
+app.use(express.json());
+
+
 
 //Importar rutas
 const rutaU = require('./routes/usuarioR');

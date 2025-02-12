@@ -13,7 +13,7 @@ const { bd, Usuario, Oferta } = require('./Models/index');
 //Conectar con la BD
 bd.sync(
     {
-        force: true,//¡¡ CAMBIAR A FALSE CUANDO EL ESQUEMA DEL BD SEA DEFINITIVO !!
+        force: false,//¡¡ CAMBIAR A FALSE CUANDO EL ESQUEMA DEL BD SEA DEFINITIVO !!
     })
     .then(() => {
         console.log('BD sincronizada');
