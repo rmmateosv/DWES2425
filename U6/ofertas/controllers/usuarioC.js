@@ -3,10 +3,34 @@ const Usuario = require('../Models/usuario');
 //Importar bcrypt
 const cifrar = require('bcrypt');
 
-function login(req, res) {
+async function login(req, res) {
 
+    try {
+        //Recuperar datos
+        const {email, password} = req.body;
+        if(!email || !password){
+            throw 'Falta email o ps';
+        }
+        //REcuperar el us por el email
+        const us = await Usuario.findOne({where:{email}});
+        if(!us){
+            throw 'Usuario incorrecto';
+        }
+        else{
+            //Comprobar con bcrypt si la contraseña es correcta
+            if(await cifrar.compare(password,us.password)){
+                res.status(200).send({email:us.email,nombre:us.nombre,perfil:us.perfil});
+                //res.status(200).send(us);
+            }
+            else{
+                throw 'Usuario incorrecto';
+            }
+        }
 
-    res.status(200).send('Página de login');
+    } catch (error) {
+        res.status(500).send({textoError:error});
+    }
+    
 }
 
 async function registro(req, res) {
