@@ -26,11 +26,58 @@ async function show(req,res){
         res.status(500).send({textoError:error});
     }
 }
-function store(req,res){
-    res.status(200).send('Crear oferta');
+async function store(req,res){
+    try {
+        const {titulo, descripcion, usuario} = req.body;
+        if(!titulo || !descripcion || !usuario){
+            throw 'Faltan datos de la oferta';
+        }
+        //Comprobar que el usuario existe
+        const us = await Usuario.findOne({where:{id:usuario,perfil:'tienda'}});
+        if(!us){
+            throw 'Tienda no existe';
+        }
+        else{
+            const o = await Oferta.create({titulo, descripcion, usuario_id:usuario});
+            res.json(o);
+        }
+    } catch (error) {
+        res.status(500).send({textoError:error});
+    }
 }
-function update(req,res){
-    res.status(200).send('Modificar oferta');
+async function update(req,res){
+    try {
+        const {titulo,descripcion} = req.body;
+        if(!titulo && !descripcion){
+            throw 'Titulo o descripción son obligatorios';
+        }
+        //Comprobar que la oferta existe
+        const o = await Oferta.findByPk(req.params.id);
+        if(!o){
+            throw 'No existe oferta';
+        }
+        if(titulo){
+           // o.set('titulo',titulo);
+           o.titulo = titulo;
+        }
+        if(descripcion){
+            o.set('descripcion',descripcion);
+        }
+        //Comprobar si se ha modficado algo
+        if(o.changed()){
+            if(await o.save()){
+                res.status(200).send(o);
+            }
+            else{
+                throw 'Error al modificar la oferta';
+            }
+        }
+        else{
+            res.status(200).send({textoError:'No se han modificado datos'});
+        }
+    } catch (error) {
+        res.status(500).send({textoError:error});
+    }
 }
 function destroy(req,res){
     res.status(200).send('Borrar oferta');
