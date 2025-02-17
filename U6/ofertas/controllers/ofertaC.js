@@ -79,8 +79,25 @@ async function update(req,res){
         res.status(500).send({textoError:error});
     }
 }
-function destroy(req,res){
-    res.status(200).send('Borrar oferta');
+async function destroy(req,res){
+    try {
+        //Comprobar que la oferta existe
+        const o = await Oferta.findByPk(req.params.id);
+        if(!o){
+            throw 'Oferta no existe';
+        }
+        //Chequear que el usuario que borra es el creador de la oferta
+
+        if(await o.destroy()){
+            res.status(200).send('Oferta borrada')
+        }
+        else{
+            throw 'Error al borrar la oferta';
+        }
+
+    } catch (error) {
+        res.status(500).send({textoError:error});
+    }   
 }
 
 module.exports={
