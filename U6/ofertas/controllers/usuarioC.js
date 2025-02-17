@@ -3,6 +3,9 @@ const Usuario = require('../Models/usuario');
 //Importar bcrypt
 const cifrar = require('bcrypt');
 
+//Importar gestión de tokens
+const servicioJWT = require('../service/jwt');
+
 async function login(req, res) {
 
     try {
@@ -19,8 +22,11 @@ async function login(req, res) {
         else{
             //Comprobar con bcrypt si la contraseña es correcta
             if(await cifrar.compare(password,us.password)){
-                res.status(200).send({email:us.email,nombre:us.nombre,perfil:us.perfil});
-                //res.status(200).send(us);
+                //Crear token
+                const token = servicioJWT.crearToken(us,'24h');
+                res.status(200).send({email:us.email,nombre:us.nombre,
+                                      perfil:us.perfil, token:token});
+                //res.status(200).send({us:us, token:token});
             }
             else{
                 throw 'Usuario incorrecto';
