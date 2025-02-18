@@ -5,7 +5,11 @@ async function index(req,res){
     try {
         //Recuperar las ofertas y los datos del usuario 
         //que las ha creado
-        const ofertas = await Oferta.findAll({include: Usuario});
+        //const ofertas = await Oferta.findAll({include: Usuario});
+        const ofertas = await Oferta.findAll({include: {
+            model:Usuario,
+            attributes:['nombre']
+        }});
         res.json(ofertas);
         
     } catch (error) {
@@ -15,7 +19,10 @@ async function index(req,res){
 async function show(req,res){
     try {
         //REcuperar oferta por id que es PK y llega por la ruta
-        const oferta = await Oferta.findByPk(req.params.id,{include:Usuario});
+        const oferta = await Oferta.findByPk(req.params.id,{include: {
+            model:Usuario,
+            attributes:['nombre']
+        }});
         if(!oferta){
             throw 'Oferta no encontrada'
         }

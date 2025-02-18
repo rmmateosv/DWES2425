@@ -69,10 +69,31 @@ async function registro(req, res) {
     }
 
 }
+async function subirAvatar(req,res){
+    try {
+        //console.log("ddd"+req.datosUS.email);
+        console.log(req.body.aa);
+        console.log(req.files);
+        //Comprobar si hay fichero en req
+        if(!req.files.avatar){
+            throw 'No has proporcionado fichero';
+        }
+        
+        res.status(200).send();
+        
+    } catch (error) {
+        res.status(500).send({textoError:error});
+    }
 
+}
+async function obtenerAvatar(req,res){
+
+}
 //Exportar funciones para usarlas fuera de este fichero
 module.exports = {
     login,
-    registro
+    registro,
+    subirAvatar,
+    obtenerAvatar
 }
 
