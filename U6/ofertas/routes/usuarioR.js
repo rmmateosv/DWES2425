@@ -9,7 +9,7 @@ const api = express.Router();
 const mAuth = require('../middelware/auth');
 //Configurar middelware para subir ficheros a la carpeta ,avatars
 const subirF = require('connect-multiparty');
-const mAvatar = subirF({uploaddir:'./avatars'});
+const mAvatar = subirF({uploadDir:'./avatars'});
 
 //Importamos el controlador donde se definen las funciones asignadas
 //a las rutas

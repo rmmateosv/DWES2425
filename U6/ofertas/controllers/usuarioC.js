@@ -72,7 +72,6 @@ async function registro(req, res) {
 async function subirAvatar(req,res){
     try {
         //console.log("ddd"+req.datosUS.email);
-        console.log(req.body.aa);
         console.log(req.files);
         //Comprobar si hay fichero en req
         if(!req.files.avatar){
