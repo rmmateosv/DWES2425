@@ -10,7 +10,7 @@ function comprobarAuth(req, res, next){
             return res.status(403).send('No se envía token');
         }
         const resultado = servicioJWT.verificarToken(req.headers.authorization);
-        //console.log(resultado);
+        console.log(resultado);
         //Añadirmos a los datos de petición (req) el payload
         req.datosUS = resultado;
         next();

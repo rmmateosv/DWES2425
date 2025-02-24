@@ -5,38 +5,45 @@ const cifrar = require('bcrypt');
 
 //Importar gestión de tokens
 const servicioJWT = require('../service/jwt');
+const { request } = require('express');
+
+//Importar librerías que permiten trabajar con ficheros
+const fs = require('fs');
+const path = require('path');
 
 async function login(req, res) {
 
     try {
         //Recuperar datos
-        const {email, password} = req.body;
-        if(!email || !password){
+        const { email, password } = req.body;
+        if (!email || !password) {
             throw 'Falta email o ps';
         }
         //REcuperar el us por el email
-        const us = await Usuario.findOne({where:{email}});
-        if(!us){
+        const us = await Usuario.findOne({ where: { email } });
+        if (!us) {
             throw 'Usuario incorrecto';
         }
-        else{
+        else {
             //Comprobar con bcrypt si la contraseña es correcta
-            if(await cifrar.compare(password,us.password)){
+            if (await cifrar.compare(password, us.password)) {
                 //Crear token
-                const token = servicioJWT.crearToken(us,'24h');
-                res.status(200).send({email:us.email,nombre:us.nombre,
-                                      perfil:us.perfil, token:token});
+                const token = servicioJWT.crearToken(us, '24h');
+                res.status(200).send({
+                    email: us.email, nombre: us.nombre,
+                    perfil: us.perfil, token: token
+                });
                 //res.status(200).send({us:us, token:token});
             }
-            else{
+            else {
                 throw 'Usuario incorrecto';
             }
         }
 
     } catch (error) {
-        res.status(500).send({textoError:error});
+        res.status(500).send({ textoError: error });
     }
-    
+
 }
 
 async function registro(req, res) {
@@ -46,7 +53,7 @@ async function registro(req, res) {
 
         //Validar si vienen todos los datos para registro
         if (!nombre || !email || !password || !perfil) {
-            throw 'Faltan datos para registrar al usuario' ;
+            throw 'Faltan datos para registrar al usuario';
         }
         //Comprobar que no hay otro usuario con el mismo email
         //Hacemos un select a la tabla usuarios por email
@@ -65,28 +72,59 @@ async function registro(req, res) {
         //Devolver el usuario creado
         res.status(200).send(us);
     } catch (error) {
-        res.status(500).send({textoError:error});
+        res.status(500).send({ textoError: error });
     }
 
 }
-async function subirAvatar(req,res){
+async function subirAvatar(req, res) {
     try {
-        //console.log("ddd"+req.datosUS.email);
         console.log(req.files);
         //Comprobar si hay fichero en req
-        if(!req.files.avatar){
+        if (!req.files.avatar) {
             throw 'No has proporcionado fichero';
         }
-        
-        res.status(200).send();
-        
+        //Obtener el nombre del fichero para
+        //guardarlo en la bd, en el usuario
+        const rutaF = req.files.avatar.path.split('/');
+        //datosUS lo hemos crado en req al validar el token
+        const us = await Usuario.findByPk(req.datosUS.id);
+        //Rellenar el atributo avatar con el nombre del fichero subido
+        us.avatar = rutaF[1];
+        if (us.changed()) {
+            await us.save();
+            res.status(200).send('Avatar actualizado');
+        }
+        else {
+            res.status(200).send('No se han mpdificado datos');
+        }
+
     } catch (error) {
-        res.status(500).send({textoError:error});
+        res.status(500).send({ textoError: error });
     }
 
 }
-async function obtenerAvatar(req,res){
-
+async function obtenerAvatar(req, res) {
+    try {
+        //Comproba que us existe y tiene avatar
+        const us = await Usuario.findByPk(req.datosUS.id);
+        if (!us || !us.avatar) {
+            throw 'Usuario no existe o no tiene avatar';
+        }
+        else {
+            const nombreF = `./avatars/${us.avatar}`;
+            //Acceder al fichero para devolver
+            fs.stat(nombreF,(error,stat)=>{
+                if(error){
+                    throw 'Imagen no disponible';
+                }
+                else{
+                    res.sendFile(path.resolve(nombreF));
+                }
+            });
+        }
+    } catch (error) {
+        res.status(500).send({ textoError: error });
+    }
 }
 //Exportar funciones para usarlas fuera de este fichero
 module.exports = {
