@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Route;
 //Rutas sin autenticacion
 Route::post('login', [LoginController::class,'login'] );
 Route::post('registro', [LoginController::class,'registro'] );
+Route::get('pdf', [PedidoController::class,'pdf'] );
 
 //Rutas con autenticacion
 Route::post('logout', [LoginController::class,'logout'] )->middleware('auth:sanctum');
 Route::get('pedidos', [PedidoController::class,'index'] )->middleware('auth:sanctum');
 Route::get('productos', [ProductoController::class,'index'] )->middleware('auth:sanctum');
 Route::post('pedidos', [PedidoController::class,'store'] )->middleware('auth:sanctum');
+
