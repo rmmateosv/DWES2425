@@ -13,7 +13,8 @@
     <p>Nº de pedidos:{{ $numPed }}</p>
     <p>Nº de productos:{{ $numProd }}</p>
     <p>Precio Medio de venta:{{ $pvpMedio }}</p>
-
+    
+    <h2>Cantidad vendida por producto</h2>
     <table>
         <tr>
             <td>Producto</td>
@@ -21,7 +22,6 @@
             <td>Producto</td>
             <td>Cantidad vendida</td>
         </tr>
-        <h2>Cantidad vendida por producto</h2>
         @foreach ($e1 as $e)
            <tr>
                 <td>{{$e->producto->nombre}}</td>
@@ -30,7 +30,14 @@
                 <td>{{$e['cantidad']}}</td>
            </tr>
         @endforeach
-        <h2>Total vendido por producto</h2>
+    </table >
+    <table>
+        <tr>
+            <td>Producto</td>
+            <td>Total Recaudado</td>
+
+        </tr>
+
         @foreach ($e2 as $e)
            <tr>
                 <td>{{$e->producto}}</td>

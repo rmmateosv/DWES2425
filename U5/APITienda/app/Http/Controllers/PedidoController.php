@@ -42,8 +42,8 @@ class PedidoController
             ];
 
             $pdf = Pdf::loadView('pdf',$datosPDF);
-            //return $pdf->stream('reporte.pdf');
-            return $pdf->download('reporte.pdf');
+            //return $pdf->stream('pedidos.pdf');
+            return $pdf->download('pedidos.pdf');
             
         } catch (\Throwable $th) {
             return response()->json('Error:'.$th->getMessage(),500);
