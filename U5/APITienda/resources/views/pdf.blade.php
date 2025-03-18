@@ -21,7 +21,7 @@
             <td>Producto</td>
             <td>Cantidad vendida</td>
         </tr>
-        <h2>Canidad vendida por producto</h2>
+        <h2>Cantidad vendida por producto</h2>
         @foreach ($e1 as $e)
            <tr>
                 <td>{{$e->producto->nombre}}</td>
