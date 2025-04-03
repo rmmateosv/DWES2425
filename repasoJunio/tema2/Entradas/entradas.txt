@@ -1,0 +1,3 @@
+aaaaaa;Menor 6;2025-04-03;1;familia numerosa/Dia del espectador;4.655
+bbbb;Mayor 60;2025-04-29;2;abonado;14.4
+cccc;General;2025-04-29;1;;10

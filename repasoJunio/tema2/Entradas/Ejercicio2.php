@@ -1,3 +1,6 @@
+<?php
+require_once "Modelo.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -70,7 +73,7 @@ if(isset($_POST['comprar'])){
             echo "Tiene que ser entre 1 y 4";
 
         }else{
-            if($_POST['tipoEntrada']=='Mayor 60' && isset($_POST['descuento']) && in_array('Familia numerosa',$_POST['descuento'])) {
+            if($_POST['tipoEntrada']=='Mayor 60' && isset($_POST['descuento']) && in_array('familia numerosa',$_POST['descuento'])) {
                 echo "Mayor de 60 no es compatible con el descuento de familia numerosa";
             }else{
 
@@ -84,11 +87,18 @@ if(isset($_POST['comprar'])){
                     $total=5*($_POST['numEntradas']);
                 }
 
+                if(isset($_POST['descuento'])){
+                    if(in_array('familia numerosa', $_POST['descuento'])){
+                        $total=$total*0.95;
+                    }
+                    if(in_array('abonado', $_POST['descuento'])){
+                        $total=$total*0.90;
+                    }
+                    if(in_array('Dia del espectador', $_POST['descuento'])){
+                        $total=$total*0.98;
+                    }
+                }
                 ?>
-
-              
-
-
 
                 <table border=1>
                     <tr>
@@ -119,13 +129,20 @@ if(isset($_POST['comprar'])){
                     
                 </table>
 
+            <?php
 
-                <?php
+                //crear el objeto entrada
+                $e=new Entrada($_POST['nombre'],$_POST['tipoEntrada'], $_POST['fechaEvento'],
+                                $_POST['numEntradas'],
+                                (isset($_POST['descuento']) ? implode('/',$_POST['descuento']) : '') ,$total);
+                $f=new Modelo();
 
-               
+                if($f->insertar($e)){
+                    echo 'Entrada guardada';
+                }
+
             }
         }
-        
     }
 }
 
