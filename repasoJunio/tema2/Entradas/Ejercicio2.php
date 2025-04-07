@@ -1,5 +1,6 @@
 <?php
 require_once "Modelo.php";
+$f=new Modelo();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,7 +61,7 @@ require_once "Modelo.php";
             <button type="submit" name="comprar" id="comprar">Comprar</button>
         </fieldset>
     </form>
-</body>
+
 
 <?php
 if(isset($_POST['comprar'])){
@@ -135,7 +136,7 @@ if(isset($_POST['comprar'])){
                 $e=new Entrada($_POST['nombre'],$_POST['tipoEntrada'], $_POST['fechaEvento'],
                                 $_POST['numEntradas'],
                                 (isset($_POST['descuento']) ? implode('/',$_POST['descuento']) : '') ,$total);
-                $f=new Modelo();
+                
 
                 if($f->insertar($e)){
                     echo 'Entrada guardada';
@@ -145,7 +146,37 @@ if(isset($_POST['comprar'])){
         }
     }
 }
+?>
+<table border="1">
+  <tr>
+    <th>nombre</th>
+    <th>tipo</th>
+    <th>fecha</th>
+    <th>nº entradas</th>
+    <th>descuento</th>
+    <th>total</th>
+  </tr>
+
+<?php
+// Mostrar datos del fichero
+$entradas = $f->cargarEntradas();
+foreach ($entradas as $e) {
+  // Truco del truco
+  // $e = new Entrada(null,null,null,null,null,null);
+  echo '<tr>';
+  echo '<td>'.$e->getNombreCliente().'</td>';
+  echo '<td>'.$e->getTipoEntrada().'</td>';
+  echo '<td>'.$e->getFechaEvento().'</td>';
+  echo '<td>'.$e->getNEntradas().'</td>';
+  echo '<td>'.$e->getDescuentos().'</td>';
+  echo '<td>'.$e->getImporte().'</td>';
+  echo '</tr>';
+
+  
+
+}
 
 ?>
-
+</table>
+</body>
 </html>

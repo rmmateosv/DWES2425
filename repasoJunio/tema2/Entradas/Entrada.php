@@ -59,7 +59,7 @@ class Entrada{
     {
         $this->fechaEvento = $fechaEvento;
 
-        return $this;
+        return $this->FechaEvento;
     }
 
     /**
