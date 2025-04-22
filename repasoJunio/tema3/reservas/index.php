@@ -61,18 +61,27 @@ if ($bd->getConexion()==null) {
                     <td>
                         <h3 style="color:blue">Color Reservas</h3>
 
-                        <input type="color" name="color" />
+                        <input type="color" name="color" value="<?php 
+                        echo (isset($_COOKIE['color'])? $_COOKIE['color']: 0);
+                        ?>"/>
                         <input type="submit" name="cambiarColor" value="cambiar" />
                     </td>
                     <td>
                         <input type="submit" name="salir" value="Salir" />
                     </td>
                 </tr>
+                <tr>
+                    <td><?php echo $_SESSION['usuario']->getIdRayuela() ?></td>
+                    <td><?php echo $_SESSION['usuario']->getNombre() ?></td>
+                    <td><?php echo $_SESSION['usuario']->getNumReservas() ?></td>
+                    <td></td>
+                </tr>
             </table>
         </section>
         <!-- Seleccionar Recurso -->
         <section>
             <h3 style="color:blue">Selecciona Recurso</h3>
+            <?php $recursos=$bd->obtenerRecursos()?>
             <select name="recurso">
             </select>
             <input type="submit" name="verR" value="verReservas" />
