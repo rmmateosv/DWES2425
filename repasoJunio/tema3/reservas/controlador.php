@@ -26,4 +26,6 @@ if (isset($_POST['acceder'])) {
 } elseif (isset($_POST['cambiarColor'])) {
     setcookie('color', $_POST['color']);
     header('location:index.php');
+}elseif (isset($_POST['verR'])) {
+    $reservas = $bd->obtenerReservas($_POST['recurso']);
 }
