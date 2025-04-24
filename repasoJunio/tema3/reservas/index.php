@@ -123,7 +123,7 @@ if ($bd->getConexion() == null) {
 				<section>
 					<h3 style="color:blue">Crear/Anular Reserva</h3>
 					<label for="fecha">Fecha Reserva</label>
-					<input type="date" name="fecha" id="fecha" />
+					<input type="date" name="fecha" id="fecha" value="<?php echo (!empty($_POST['fecha'])?$_POST['fecha']:date('Y-m-d'))?>" />
 					<label for="hora">Hora Reserva</label>
 					<select name="hora" id="hora">
 						<option value="1">Primera</option>

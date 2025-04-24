@@ -44,6 +44,7 @@ class Modelo
 
 		return $respuesta;
 	}
+
 	function obtenerRecursos()
 	{
 		$respuesta = array();
@@ -85,6 +86,120 @@ class Modelo
 			$mensaje = $th->getMessage();
 		}
 		return $respuesta;
+	}
+
+	function verificarDisponibilidad($fecha,$recurso,$hora){
+
+		$respuesta=false;
+
+		try {
+			$consulta=$this->conexion->prepare('SELECT disponibilidad(?,?,?)');
+			$params=array($recurso,$fecha,$hora);
+
+			if($consulta->execute($params)){
+				if($fila=$consulta->fetch()){
+					
+					// seria lo mismo $respuesta=$fila[0];
+					return $fila[0];
+				}
+			}
+			
+		} catch (\Throwable $th) {
+			global $mensaje;
+			$mensaje = $th->getMessage();
+		}
+
+		return $respuesta;
+
+	}
+
+	function guardarReserva($r){
+		$respuesta=false;
+		try {
+			
+			$this->conexion->beginTransaction();
+			//Consulta para insertar la reserva
+			$consulta=$this->conexion->prepare('INSERT into reservas(recurso,usuario,hora,fecha) values (?,?,?,?)');
+			$params=array($r->getRecurso(),$r->getUsuario(),$r->getHora(),$r->getFecha());
+			if($consulta->execute($params) and $consulta->rowCount()==1){
+				$consulta=$this->conexion->prepare('UPDATE usuarios set numReservas=numReservas + 1 where idRayuela= ?');
+				$params=array($r->getUsuario());
+
+				if($consulta->execute($params) and $consulta->rowCount()==1){
+					$this->conexion->commit();
+					$respuesta=true;
+
+				}else{
+					$this->conexion->rollback();
+					
+				}
+	
+			}
+
+		} catch (\Throwable $th) {
+
+			$this->conexion->rollback();
+			global $mensaje;
+			$mensaje = $th->getMessage();
+		}
+
+		return $respuesta;
+
+	}
+
+	function infoUsuario($usuario)
+	{
+		$respuesta = null;
+		try {
+			$consulta = $this->conexion->prepare('SELECT * FROM usuarios WHERE idrayuela=?');
+			$params = [$usuario];
+			if ($consulta->execute($params)) {
+				if ($fila = $consulta->fetch()) {
+					$respuesta = new Usuarios($fila[0], $fila[1], $fila['activo'], $fila['numReservas']);
+				}
+			}
+		} catch (\Throwable $th) {
+			global $mensaje;
+			$mensaje = $th->getMessage();
+		}
+
+		return $respuesta;
+	}
+
+	function anularReserva($usuario,$recurso,$fecha,$hora){
+		
+		$respuesta=false;
+		try {
+			
+			$this->conexion->beginTransaction();
+			//Consulta para insertar la reserva
+			$consulta=$this->conexion->prepare('UPDATE reservas set anulada=true where usuario=? and recurso=? and fecha=? and hora=?');
+			$params=array($usuario,$recurso,$fecha,$hora);
+
+			if($consulta->execute($params) and $consulta->rowCount()==1){
+				$consulta=$this->conexion->prepare('UPDATE usuarios set numReservas=numReservas - 1 where idRayuela= ?');
+				$params=array($usuario);
+
+				if($consulta->execute($params) and $consulta->rowCount()==1){
+					$this->conexion->commit();
+					$respuesta=true;
+
+				}else{
+					$this->conexion->rollback();
+					
+				}
+	
+			}
+
+		} catch (\Throwable $th) {
+
+			$this->conexion->rollback();
+			global $mensaje;
+			$mensaje = $th->getMessage();
+		}
+
+		return $respuesta;
+
 	}
 	/**
 	 * Get the value of conexion

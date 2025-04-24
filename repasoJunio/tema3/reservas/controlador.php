@@ -29,3 +29,48 @@ if (isset($_POST['acceder'])) {
 }elseif (isset($_POST['verR'])) {
     $reservas = $bd->obtenerReservas($_POST['recurso']);
 }
+elseif(isset($_POST['reservar'])){
+
+    if(empty($_POST['fecha']) ||empty($_POST['recurso']) || empty($_POST['hora'])){
+        $mensaje='Debe estan rellenos lo campos';
+    }else{
+       
+        if($bd->verificarDisponibilidad($_POST['fecha'],$_POST['recurso'],$_POST['hora'])){
+            //Creamos la reserva
+            $r=new Reservas(null,$_SESSION['usuario']->getIdRayuela(),$_POST['recurso'],$_POST['fecha'],$_POST['hora'],false);
+
+            if($bd->guardarReserva($r)){
+                $mensaje='Reservado correctamente';
+
+                //actualizar el usuario en la sesion
+                $_SESSION['usuario']=$bd->infoUsuario($_SESSION['usuario']->getIdRayuela());
+
+            }else{
+                $mensaje='Error, no se ha podido reservar';
+            }
+
+        }else{
+            $mensaje='Error no se puede reservar';
+        }
+    }
+
+
+}elseif(isset($_POST['anular'])){
+
+    if(empty($_POST['fecha']) ||empty($_POST['recurso']) || empty($_POST['hora'])){
+        $mensaje='Debe estan rellenos lo campos';
+    }else{
+
+        if($bd->anularReserva($_SESSION['usuario']->getIdRayuela(),$_POST['recurso'],$_POST['fecha'],$_POST['hora'])){
+
+            $mensaje='Reserva anulada correctamente';
+
+            //actualizar la info del usuario
+            $_SESSION['usuario']=$bd->infoUsuario($_SESSION['usuario']->getIdRayuela());
+        }else{
+            $mensaje='Error no se ha podido anular';
+        }
+
+    }
+
+}
