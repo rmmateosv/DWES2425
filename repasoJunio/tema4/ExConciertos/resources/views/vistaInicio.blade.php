@@ -18,7 +18,7 @@
         <button type="submit" name="btnEntradas" id="btnEntradas">Entradas</button>
         <h3>Listado de Conciertos</h3>
 
-        <table style="border: 1px solid black">
+        <table border="1">
             <thead>
                 <tr>
                     <td>ID</td>
