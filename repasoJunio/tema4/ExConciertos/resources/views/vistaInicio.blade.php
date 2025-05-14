@@ -23,7 +23,7 @@
                 <tr>
                     <td>ID</td>
                     <td>Titulo</td>
-                    <td>Fechas</td>
+                    <td>Fechas</td> 
                     <td>Aforo</td>
                     <td>Precio</td>
                 </tr>
