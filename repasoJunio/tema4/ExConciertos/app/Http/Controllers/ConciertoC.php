@@ -61,6 +61,28 @@ class ConciertoC extends Controller
     }
 
     function borrarM($idC){
-        return 'pagina de borrar entradas del concierto '.$idC;
+        try {
+            $concierto = Concierto::find($idC);
+            if ($concierto != null) {
+                $entradas = $concierto->entradas();
+                if (empty($entradas)) {
+                    $concierto->delete();
+                }else {
+                    DB::transaction(function ()use($concierto,$entradas) {
+                        foreach ($entradas as $e) {
+                            $e->delete();
+                        }
+                        $concierto->delete();
+                    });
+                }
+                
+            }else {
+                throw new Exception('No existe el concierto');
+            }
+        } catch (\Throwable $th) {
+            return back()->with('mensaje',$th->getMessage());
+        }
+        
+        return back()->with('mensaje','Concierto Borrado');
     }
 }
