@@ -9,6 +9,9 @@
 <body>
     <form action="{{route('rE')}}" method="get">
         <h3>Selecciona un concierto</h3>
+        @if (session('mensaje'))
+            <h2 style="color: red;">{{session('mensaje')}}</h2>    
+        @endif
 
         <select name="c">
             @foreach ($conciertos as $c)

@@ -75,7 +75,6 @@ class ConciertoC extends Controller
                         $concierto->delete();
                     });
                 }
-                
             }else {
                 throw new Exception('No existe el concierto');
             }
@@ -83,6 +82,6 @@ class ConciertoC extends Controller
             return back()->with('mensaje',$th->getMessage());
         }
         
-        return back()->with('mensaje','Concierto Borrado');
+        return redirect()->route('rI')->with('mensaje','Concierto Borrado');
     }
 }

@@ -25,5 +25,11 @@ class ConciertoS extends Seeder
         'aforo'=>500, 
         'precioEntrada'=>20
     ]);
+    DB::table('conciertos')->insert([
+        'titulo' => 'Jesús y no viene a la fiesta', 
+        'fecha'=>'2025-05-16',
+        'aforo'=>80, 
+        'precioEntrada'=>20
+    ]);
     }
 }
